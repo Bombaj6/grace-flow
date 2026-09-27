@@ -1,0 +1,29 @@
+{
+  "activeSchedule": [
+    {
+      "id": "mw-1",
+      "title": "Opening Praise & Prayer",
+      "durationMinutes": 15
+    },
+    {
+      "id": "mw-2",
+      "title": "Worship Session",
+      "durationMinutes": 15
+    },
+    {
+      "id": "mw-3",
+      "title": "Bible Study & Exhortation",
+      "durationMinutes": 45
+    },
+    {
+      "id": "mw-4",
+      "title": "Corporate Intercession",
+      "durationMinutes": 20
+    },
+    {
+      "id": "mw-5",
+      "title": "Closing Remarks & Benediction",
+      "durationMinutes": 10
+    }
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "name": "grace-flow",
+  "version": "1.0.0",
+  "description": "Grace Flow - Church Countdown, Clock & Run of Show Management System",
+  "type": "module",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "build:app": "bash scripts/build-app.sh"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "keywords": [
+    "countdown",
+    "church",
+    "stage-timer",
+    "run-of-show",
+    "ndi",
+    "presentation"
+  ],
+  "author": "",
+  "license": "ISC"
+}

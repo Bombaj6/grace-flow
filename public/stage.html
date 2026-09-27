@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Grace Flow — Church Countdown Display</title>
+  <link rel="icon" type="image/png" href="/assets/icon.png">
+  <link rel="stylesheet" href="/css/stage.css">
+</head>
+<body class="stage-body">
+  <!-- Glowing Perimeter Warning Border (Turns from Green to Yellow to Red) -->
+  <div id="perimeterBorder" class="perimeter-border border-green"></div>
+
+  <!-- Stage Container -->
+  <main class="stage-viewport">
+    <!-- Top Header Title Badge (Shown in digital mode) -->
+    <header id="stageHeader" class="stage-header">
+      <div id="stageItemTitle" class="stage-title-badge">Grace Flow</div>
+    </header>
+
+    <!-- Stage Center Display Area -->
+    <div class="stage-center-content">
+      <!-- 1. Digital Countdown View -->
+      <div id="digitalView" class="view-panel active">
+        <div id="digitalDigits" class="digital-digits font-digital">00:00</div>
+      </div>
+
+      <!-- 2. Analog / Circular Ring Countdown View (Matching User Image 1 Exactly!) -->
+      <div id="analogView" class="view-panel">
+        <div class="circular-countdown-wrapper">
+          <svg class="circular-countdown-svg" viewBox="0 0 500 500">
+            <!-- Background Circular Track -->
+            <circle cx="250" cy="250" r="215" class="ring-track"></circle>
+            <!-- Glowing Active Progress Ring (Sweeps clockwise from 12 o'clock) -->
+            <circle id="ringProgress" cx="250" cy="250" r="215" class="ring-progress ring-purple"></circle>
+          </svg>
+          <!-- Center Content: Big Bold Digits + Item Title Subtitle -->
+          <div class="ring-center-content">
+            <div id="analogDigits" class="ring-digits">09:50</div>
+            <div id="analogItemTitle" class="ring-subtitle">OPENING PRAYER</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3. Normal Clock Time View (Only shown when explicitly switched to Clock Time mode) -->
+      <div id="clockTimeView" class="view-panel">
+        <div class="clock-time-container">
+          <div id="wallClockTime" class="wall-clock-digits">7:30:00</div>
+          <div id="wallClockAmPm" class="wall-clock-ampm">AM</div>
+          <div id="wallClockDate" class="wall-clock-date">Sunday Service</div>
+        </div>
+      </div>
+
+      <!-- TIME'S UP Overlay Banner (Displayed when time runs out) -->
+      <div id="timesUpBanner" class="times-up-banner hidden">
+        <div class="times-up-content">
+          <div class="times-up-icon">🚨</div>
+          <div class="times-up-text">TIME'S UP</div>
+        </div>
+      </div>
+
+      <!-- Stage Alert Message / Note Overlay -->
+      <div id="stageMessageOverlay" class="stage-message-overlay hidden">
+        <div id="stageMessageBox" class="stage-message-box">
+          <span class="msg-bell-icon">🔔</span>
+          <span id="stageMessageText" class="stage-message-text">Message</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Clean Stage Footer: Clock time completely removed during countdown as requested -->
+    <footer class="stage-footer"></footer>
+  </main>
+
+  <!-- Fullscreen Controls & Tooltips (Auto-hides) -->
+  <button id="btnToggleFullscreen" class="fs-toggle-btn" title="Toggle Fullscreen (Double-Click Anywhere)">⛶</button>
+
+  <script src="/js/stage.js"></script>
+</body>
+</html>

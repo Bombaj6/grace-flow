@@ -1,0 +1,36 @@
+[
+  {
+    "id": "sunday-service",
+    "name": "Sunday Morning Service",
+    "items": [
+      { "id": "item-1", "title": "Pre-Service Prayer", "durationMinutes": 30 },
+      { "id": "item-2", "title": "Worship Service", "durationMinutes": 20 },
+      { "id": "item-3", "title": "Welcome & Opening", "durationMinutes": 10 },
+      { "id": "item-4", "title": "Sermon", "durationMinutes": 40 },
+      { "id": "item-5", "title": "Announcements", "durationMinutes": 20 },
+      { "id": "item-6", "title": "Benediction", "durationMinutes": 15 }
+    ]
+  },
+  {
+    "id": "midweek-prayer",
+    "name": "Midweek Prayer & Bible Study",
+    "items": [
+      { "id": "mw-1", "title": "Opening Praise & Prayer", "durationMinutes": 15 },
+      { "id": "mw-2", "title": "Worship Session", "durationMinutes": 15 },
+      { "id": "mw-3", "title": "Bible Study & Exhortation", "durationMinutes": 45 },
+      { "id": "mw-4", "title": "Corporate Intercession", "durationMinutes": 20 },
+      { "id": "mw-5", "title": "Closing Remarks & Benediction", "durationMinutes": 10 }
+    ]
+  },
+  {
+    "id": "youth-night",
+    "name": "Youth Night / Encounter Service",
+    "items": [
+      { "id": "yn-1", "title": "Icebreaker & Connect", "durationMinutes": 15 },
+      { "id": "yn-2", "title": "High Energy Praise & Worship", "durationMinutes": 25 },
+      { "id": "yn-3", "title": "Youth Message", "durationMinutes": 30 },
+      { "id": "yn-4", "title": "Altar & Ministry Time", "durationMinutes": 20 },
+      { "id": "yn-5", "title": "Hangout & Refreshments", "durationMinutes": 30 }
+    ]
+  }
+]

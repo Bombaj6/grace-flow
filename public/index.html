@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Grace Flow — Church Countdown & Service System</title>
+  <link rel="icon" type="image/png" href="/assets/icon.png">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <!-- Global Top Navigation Bar -->
+  <header class="app-header">
+    <div class="brand">
+      <div class="brand-icon">🕊️</div>
+      <div class="brand-text">
+        <h1>GRACE FLOW</h1>
+        <span class="brand-tagline">Church Countdown & Stage Production</span>
+      </div>
+    </div>
+
+    <!-- Center: Deck Navigation Tabs -->
+    <nav class="deck-nav">
+      <button class="nav-tab active" data-deck="live-deck">
+        <span class="nav-icon">⏱️</span> Live Deck
+      </button>
+      <button class="nav-tab" data-deck="schedule-deck">
+        <span class="nav-icon">📋</span> Program & Drafts
+      </button>
+      <button class="nav-tab" data-deck="settings-deck">
+        <span class="nav-icon">⚙️</span> Settings & NDI
+      </button>
+    </nav>
+
+    <!-- Right: Persistent Live Status & Quick Action Buttons -->
+    <div class="header-right">
+      <div class="time-of-day-badge">
+        <span class="label">CURRENT TIME</span>
+        <span id="headerWallClock" class="clock-val">--:--:-- --</span>
+      </div>
+
+      <div id="liveStatusBadge" class="status-badge status-stopped">
+        <span class="status-dot"></span>
+        <span id="liveStatusText">STOPPED</span>
+      </div>
+
+      <!-- Quick Emergency Blackout Button -->
+      <button id="btnBlackout" class="action-btn blackout-btn" title="Blank Stage Screen (B)">
+        <span class="btn-icon">👁️‍🗨️</span> Blackout <kbd class="kbd-hint">B</kbd>
+      </button>
+
+      <!-- Persistent Second Screen Button -->
+      <button id="btnSecondScreen" class="action-btn primary-btn projection-btn" title="Send to Second Screen (Extend)">
+        <span class="btn-icon">🖥️</span> Send to Second Screen
+      </button>
+    </div>
+  </header>
+
+  <!-- ================= DECK 1: LIVE CONTROL DECK ================= -->
+  <main id="live-deck" class="deck-view active">
+    <div class="live-deck-grid">
+      <!-- Left Column: Master Timer & Live Controls -->
+      <div class="live-timer-hero card">
+        <div class="timer-hero-header">
+          <div class="active-item-info">
+            <div class="title-row">
+              <span class="sub-label">CURRENT ACTIVE ITEM:</span>
+              <button id="btnEditTitleQuick" class="inline-edit-icon" title="Edit Item Name">✏️ Edit</button>
+            </div>
+            <div class="title-display-wrap">
+              <h2 id="currentActiveTitle" class="hero-item-title" title="Click to edit name">Welcome & Opening</h2>
+              <input type="text" id="inputEditTitle" class="hero-item-input hidden" placeholder="Enter session name..." maxlength="50">
+            </div>
+            <!-- Next Up Preview & Advance -->
+            <div id="nextUpBanner" class="next-up-banner hidden">
+              <span class="next-up-label">NEXT UP:</span>
+              <span id="nextUpTitle" class="next-up-title">--</span>
+              <button id="btnCueNextItem" class="cue-next-btn" title="Cue and load next item (N)">
+                Cue Next ▶ <kbd class="kbd-hint">N</kbd>
+              </button>
+            </div>
+          </div>
+          <!-- Mode Switcher -->
+          <div class="mode-selector-pill">
+            <button class="mode-pill active" data-mode="digital">Digital</button>
+            <button class="mode-pill" data-mode="analog">Analog</button>
+            <button class="mode-pill" data-mode="clock">Clock Time</button>
+          </div>
+        </div>
+
+        <!-- Huge Master Timer Digits -->
+        <div class="giant-timer-box">
+          <div id="masterTimerDisplay" class="giant-digits font-digital" title="Click to directly enter custom time">30:00</div>
+          <div id="timesUpBadge" class="times-up-alert hidden">TIME'S UP</div>
+          <div class="progress-bar-container">
+            <div id="masterProgressBar" class="progress-bar-fill progress-green" style="width: 100%;"></div>
+          </div>
+        </div>
+
+        <!-- Quick Custom Countdown Setter (Direct on Live Deck) -->
+        <div class="custom-countdown-bar">
+          <div class="custom-countdown-inputs">
+            <span class="custom-bar-label">⚡ QUICK CUSTOM TIMER:</span>
+            <input type="number" id="quickCustomMins" class="quick-mins-input" placeholder="Mins" min="0" max="999" value="10">
+            <input type="number" id="quickCustomSecs" class="quick-secs-input" placeholder="Secs" min="0" max="59" value="0">
+            <button id="btnSetCustomTimer" class="purple-gradient-btn small-btn" title="Set this custom countdown">Set Timer</button>
+            <button id="btnSetAndStartCustomTimer" class="purple-gradient-btn small-btn accent-start" title="Set and start immediately">▶ Set & Start</button>
+          </div>
+          <div class="quick-preset-chips">
+            <span class="preset-label">Presets:</span>
+            <button class="timer-preset-chip" data-mins="1">1m</button>
+            <button class="timer-preset-chip" data-mins="2">2m</button>
+            <button class="timer-preset-chip" data-mins="3">3m</button>
+            <button class="timer-preset-chip" data-mins="5">5m</button>
+            <button class="timer-preset-chip" data-mins="10">10m</button>
+            <button class="timer-preset-chip" data-mins="15">15m</button>
+            <button class="timer-preset-chip" data-mins="20">20m</button>
+            <button class="timer-preset-chip" data-mins="30">30m</button>
+            <button class="timer-preset-chip" data-mins="45">45m</button>
+            <button class="timer-preset-chip" data-mins="60">60m</button>
+          </div>
+        </div>
+
+        <!-- Target Clock Time Countdown (End-by-Time Setter) -->
+        <div class="target-time-bar">
+          <div class="target-time-header">
+            <div class="target-bar-label">
+              <span class="target-icon">🎯</span>
+              <span>TARGET END TIME (END-BY CLOCK):</span>
+            </div>
+            <div id="targetCalcBadge" class="target-calc-badge">Select target end time</div>
+          </div>
+          <div class="target-time-inputs">
+            <div class="target-time-picker">
+              <input type="number" id="targetHourInput" class="time-num-input" min="1" max="12" value="7" placeholder="HH">
+              <span class="time-sep">:</span>
+              <input type="number" id="targetMinuteInput" class="time-num-input" min="0" max="59" value="30" placeholder="MM">
+              <select id="targetAmPmSelect" class="ampm-select">
+                <option value="AM">AM</option>
+                <option value="PM">PM</option>
+              </select>
+            </div>
+            <button id="btnSetTargetCountdown" class="purple-gradient-btn small-btn" title="Calculate and cue countdown to target time">Set Target Timer</button>
+            <button id="btnSetAndStartTargetCountdown" class="purple-gradient-btn small-btn accent-start" title="Calculate and immediately start countdown">▶ Set & Start</button>
+            <div class="target-quick-chips">
+              <span class="preset-label">Offsets:</span>
+              <button class="target-offset-chip" data-offset="15">+15m</button>
+              <button class="target-offset-chip" data-offset="30">+30m</button>
+              <button class="target-offset-chip" data-offset="45">+45m</button>
+              <button class="target-offset-chip" data-offset="next-hour">Next Hour</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Primary Play/Pause/Reset Controls -->
+        <div class="primary-controls-row">
+          <button id="btnStartPause" class="ctrl-btn play-btn" title="Start / Pause Countdown (Space)">
+            <span class="ctrl-icon">▶</span> <span id="btnStartPauseText">Start</span>
+            <kbd class="kbd-hint">Space</kbd>
+          </button>
+          <button id="btnStopReset" class="ctrl-btn reset-btn" title="Reset to Beginning (R)">
+            <span class="ctrl-icon">↺</span> Reset
+            <kbd class="kbd-hint">R</kbd>
+          </button>
+          <button id="btnAudioChimeToggle" class="sound-toggle-btn active" title="Toggle Soft Audio Bell on Time's Up">
+            <span id="soundIcon">🔔</span>
+          </button>
+          <div class="time-adjust-group">
+            <button id="btnSub1Min" class="sub-ctrl-btn" title="Subtract 1 minute">-1m</button>
+            <button id="btnAdd1Min" class="sub-ctrl-btn" title="Add 1 minute">+1m</button>
+            <button id="btnAdd5Min" class="sub-ctrl-btn" title="Add 5 minutes">+5m</button>
+          </div>
+        </div>
+
+        <!-- Stage Alert / Note Overlay Messenger -->
+        <div class="stage-alert-section">
+          <div class="section-title">
+            <span>STAGE PROMPT / ALERT NOTE</span>
+            <label class="flash-checkbox-label">
+              <input type="checkbox" id="chkFlashAlert">
+              <span>Attention Pulse</span>
+            </label>
+          </div>
+          <div class="alert-input-row">
+            <input type="text" id="stageMessageInput" placeholder="Type a note to display over the timer (e.g. Wrap up in 2 mins, Pastor Mic is Live)..." maxlength="120">
+            <button id="btnSendAlert" class="purple-gradient-btn">Send to Stage</button>
+            <button id="btnClearAlert" class="outline-btn clear-btn">Dismiss</button>
+          </div>
+          <div class="alert-preset-chips">
+            <span class="preset-label">Quick Prompts:</span>
+            <button class="preset-chip" data-msg="Wrap Up Please">Wrap Up Please</button>
+            <button class="preset-chip" data-msg="2 Minutes Remaining">2 Mins Remaining</button>
+            <button class="preset-chip" data-msg="Pastor, Mic is Live">Pastor, Mic is Live</button>
+            <button class="preset-chip" data-msg="Please Dismiss Service">Please Dismiss</button>
+            <button class="preset-chip" data-msg="Prayer Team Standby">Prayer Team Standby</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Column: Live Monitor Preview & Up Next Queue -->
+      <div class="live-sidebar">
+        <!-- Live Stage Output Mirror -->
+        <div class="card preview-card">
+          <div class="section-title">
+            <span>STAGE OUTPUT MIRROR</span>
+            <span class="live-pill">● LIVE SCREEN</span>
+          </div>
+          <div class="stage-mirror-frame">
+            <iframe id="stagePreviewIframe" src="/stage?preview=true" title="Live Stage Display"></iframe>
+          </div>
+          <div class="preview-footer-actions">
+            <button id="btnOpenStageTab" class="outline-btn small-btn">Open in New Tab</button>
+            <button id="btnMirrorSecondScreen" class="outline-btn small-btn primary-outline">Send to 2nd Screen</button>
+          </div>
+        </div>
+
+        <!-- Quick Run-of-Show Snapshot -->
+        <div class="card quick-ro-card">
+          <div class="section-title">
+            <span>SERVICE RUN OF SHOW</span>
+            <button id="btnGoToSchedule" class="link-btn">Edit Schedule ➔</button>
+          </div>
+          <div id="quickScheduleSnapshot" class="quick-ro-list">
+            <!-- Populated via JS -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- ================= DECK 2: PROGRAM & DRAFTS DECK ================= -->
+  <main id="schedule-deck" class="deck-view">
+    <div class="schedule-deck-grid">
+      <!-- Left Column: Church Program Schedule (Run of Show) -->
+      <section class="schedule-column card">
+        <div class="column-header">
+          <h2>Church Program Schedule (Run of Show)</h2>
+          <p class="column-subtitle">
+            Create the order of service. Drag & drop items to reorder them. Click "Cue & Start" during live service to launch any item instantly!
+          </p>
+        </div>
+
+        <!-- Add Item Form -->
+        <div class="add-item-card">
+          <div class="section-title">ADD ITEM TO SCHEDULE</div>
+          <form id="addItemForm" class="add-item-form">
+            <input type="text" id="newItemTitle" placeholder="Program Item (e.g., Pre-Service Prayer, Worship...)" required>
+            <input type="number" id="newItemMins" placeholder="Mins (e.g. 30)" min="1" max="300" required>
+            <button type="submit" class="purple-gradient-btn">Add Item</button>
+          </form>
+        </div>
+
+        <!-- Active Service Schedule List -->
+        <div class="active-schedule-container">
+          <div class="schedule-list-header">
+            <div class="section-title">ACTIVE SERVICE SCHEDULE</div>
+            <div id="scheduleSummary" class="schedule-summary-badge">Total: 2h 15m (6 items)</div>
+          </div>
+          <ul id="scheduleList" class="schedule-list">
+            <!-- Populated dynamically via JS -->
+          </ul>
+        </div>
+      </section>
+
+      <!-- Right Column: Saved Schedule Drafts & Templates -->
+      <section class="templates-column card">
+        <div class="column-header">
+          <h2>Saved Schedule Drafts & Templates</h2>
+          <p class="column-subtitle">
+            Save your favorite service structures (e.g. Sunday Morning, Midweek Prayer, Youth Night) for 1-click loading.
+          </p>
+        </div>
+
+        <!-- Save Active Schedule as Draft Card -->
+        <div class="save-draft-card">
+          <div class="section-title">SAVE ACTIVE SCHEDULE AS DRAFT</div>
+          <form id="saveDraftForm" class="save-draft-form">
+            <input type="text" id="draftTemplateName" placeholder="Template Name (e.g., Sunday Service)" required>
+            <button type="submit" class="purple-gradient-btn">Save Draft</button>
+          </form>
+        </div>
+
+        <!-- Select & Load Draft Template Card -->
+        <div class="load-draft-card">
+          <div class="section-title">Select & Load Draft Template</div>
+          <div class="load-draft-controls">
+            <select id="templateSelect" class="template-dropdown">
+              <option value="">-- Choose a Saved Template --</option>
+            </select>
+            <div class="draft-action-btns">
+              <button id="btnLoadTemplate" class="outline-btn load-btn">Load Template</button>
+              <button id="btnDeleteTemplate" class="outline-btn delete-btn">Delete Draft</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Helpful Service Planning Tips -->
+        <div class="service-tips-card">
+          <div class="section-title">💡 Run of Show Tips</div>
+          <ul class="tips-list">
+            <li>Click <strong>"▶ Cue & Start"</strong> to immediately switch the live stage timer to that item.</li>
+            <li>Click <strong>"Cue Standby"</strong> to load the item into the timer ready for the speaker, without starting the countdown yet.</li>
+            <li>Drag any item using the <strong>⋮⋮ handle</strong> to re-order items on the fly during service.</li>
+          </ul>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <!-- ================= DECK 3: SETTINGS & NDI DECK ================= -->
+  <main id="settings-deck" class="deck-view">
+    <div class="settings-deck-grid">
+      <!-- Section 1: Theme Suite -->
+      <div class="card settings-card">
+        <div class="settings-card-header">
+          <div class="setting-icon">🎨</div>
+          <div>
+            <h3>Theme Suite</h3>
+            <p class="setting-desc">Select the look and feel for the operator control panel and stage monitors.</p>
+          </div>
+        </div>
+
+        <div class="theme-selection-grid">
+          <!-- Dark Theme Option -->
+          <div id="themeCardDark" class="theme-option-card active" data-theme="dark">
+            <div class="theme-preview-box dark-preview">
+              <div class="preview-header"></div>
+              <div class="preview-body"></div>
+            </div>
+            <div class="theme-name">
+              <strong>🌙 Dark Mode</strong>
+              <span>Church tech dark slate aesthetic (Default)</span>
+            </div>
+          </div>
+
+          <!-- Light Theme Option -->
+          <div id="themeCardLight" class="theme-option-card" data-theme="light">
+            <div class="theme-preview-box light-preview">
+              <div class="preview-header"></div>
+              <div class="preview-body"></div>
+            </div>
+            <div class="theme-name">
+              <strong>☀️ Light Mode</strong>
+              <span>High contrast for well-lit broadcast booths</span>
+            </div>
+          </div>
+
+          <!-- OLED True Black Option -->
+          <div id="themeCardOled" class="theme-option-card" data-theme="oled">
+            <div class="theme-preview-box oled-preview">
+              <div class="preview-header"></div>
+              <div class="preview-body"></div>
+            </div>
+            <div class="theme-name">
+              <strong>⬛ OLED True Black</strong>
+              <span>Pure black background for LED video walls</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 2: NDI & Network Broadcast Outputs -->
+      <div class="card settings-card">
+        <div class="settings-card-header">
+          <div class="setting-icon">📡</div>
+          <div>
+            <h3>NDI, OBS & Network Stage Outputs</h3>
+            <p class="setting-desc">Connect any device or broadcast switcher on your local network to Grace Flow.</p>
+          </div>
+        </div>
+
+        <div class="network-details-box">
+          <!-- Stage Monitor LAN URL -->
+          <div class="network-group">
+            <label>1. Stage Monitor URL (Any Browser / iPad / Tablet on Wi-Fi):</label>
+            <div class="copy-url-row">
+              <input type="text" id="lanStageUrlInput" readonly value="Loading...">
+              <button class="copy-btn purple-gradient-btn" data-target="lanStageUrlInput">Copy Link</button>
+              <a id="lanStageOpenLink" href="#" target="_blank" class="outline-btn test-link-btn">Open In New Window</a>
+            </div>
+            <span class="help-note">Mount an iPad or stage monitor on the pulpit and open this link. It auto-updates in real time!</span>
+          </div>
+
+          <!-- OBS / vMix Browser Source URL -->
+          <div class="network-group">
+            <label>2. OBS Studio / vMix / ProPresenter (Transparent Alpha Background):</label>
+            <div class="copy-url-row">
+              <input type="text" id="obsStageUrlInput" readonly value="Loading...">
+              <button class="copy-btn purple-gradient-btn" data-target="obsStageUrlInput">Copy Link</button>
+            </div>
+            <span class="help-note">Paste into an OBS/vMix Browser Source (1920x1080). Background is 100% transparent for camera overlays!</span>
+          </div>
+        </div>
+
+        <!-- Step-by-Step NDI Workflow Guide -->
+        <div class="ndi-instructions-card">
+          <h4>🎥 How to Stream Over NDI to the Same Network:</h4>
+          <ol class="ndi-steps">
+            <li><strong>Method 1 (OBS NDI / vMix NDI Output):</strong> Add the Transparent Browser Source link above into OBS or vMix, then turn on <em>NDI Output</em> in OBS/vMix. Any NDI receiver on the same network will receive the stage feed at zero latency.</li>
+            <li><strong>Method 2 (NewTek NDI Screen Capture):</strong> Click <em>"Send to Second Screen"</em> to open the projection window, open the free <em>NewTek NDI Screen Capture</em> app, and select the Grace Flow window as an NDI device.</li>
+            <li><strong>Method 3 (Direct Wi-Fi Device):</strong> No NDI hardware needed — any smartphone, iPad, or computer connected to the church Wi-Fi can open the Stage Monitor URL directly in Safari or Chrome.</li>
+          </ol>
+        </div>
+      </div>
+
+      <!-- Section 3: Warning Bar Thresholds -->
+      <div class="card settings-card">
+        <div class="settings-card-header">
+          <div class="setting-icon">🚨</div>
+          <div>
+            <h3>Warning Perimeter Bar Thresholds</h3>
+            <p class="setting-desc">Adjust when the screen perimeter border turns Amber (Warning) and Red (Critical).</p>
+          </div>
+        </div>
+
+        <div class="thresholds-form">
+          <div class="threshold-field">
+            <label>🟡 Amber Warning Alert (Minutes remaining):</label>
+            <input type="number" id="settingWarningMins" value="5" min="1" max="60">
+            <span class="unit-label">mins</span>
+          </div>
+          <div class="threshold-field">
+            <label>🔴 Red Critical Alert (Minutes remaining):</label>
+            <input type="number" id="settingCriticalMins" value="1" min="1" max="15">
+            <span class="unit-label">mins</span>
+          </div>
+          <button id="btnSaveThresholds" class="purple-gradient-btn">Save Thresholds</button>
+        </div>
+      </div>
+
+      <!-- Section 4: Soft Audio Bell / Chime -->
+      <div class="card settings-card">
+        <div class="settings-card-header">
+          <div class="setting-icon">🔔</div>
+          <div>
+            <h3>Soft Audio Bell / Chime</h3>
+            <p class="setting-desc">A gentle, synthesized two-tone church chime (plays locally in the media booth or stage monitor).</p>
+          </div>
+        </div>
+
+        <div class="audio-settings-box">
+          <label class="audio-setting-checkbox">
+            <input type="checkbox" id="chkChimeTimesUp" checked>
+            <span>Play gentle chime when countdown finishes (TIME'S UP)</span>
+          </label>
+          <label class="audio-setting-checkbox">
+            <input type="checkbox" id="chkChimeAlertNote" checked>
+            <span>Play subtle chime when a priority prompt note is sent to stage</span>
+          </label>
+          <div class="audio-test-row">
+            <button id="btnTestChime" class="outline-btn small-btn">🎵 Test Audio Chime</button>
+            <span class="help-note">Uses Web Audio API (zero audio downloads needed).</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 5: About & Credits -->
+      <div class="card settings-card">
+        <div class="settings-card-header">
+          <div class="setting-icon">✨</div>
+          <div>
+            <h3>About & System Credits</h3>
+            <p class="setting-desc">Software details, church media team attribution, and development credits.</p>
+          </div>
+        </div>
+
+        <div class="about-card-body">
+          <div class="about-app-banner">
+            <div class="about-badge">
+              <span class="app-logo-symbol">🕊️</span>
+              <div class="app-title-group">
+                <h4>Grace Flow</h4>
+                <span class="app-edition-tag">Stage Countdown & Service Flow System • v1.0</span>
+              </div>
+            </div>
+            <span class="status-ready-pill">● Production Ready</span>
+          </div>
+
+          <div class="about-credits-grid">
+            <div class="credit-item">
+              <label for="creditDeveloperInput">Built By / Lead Developer:</label>
+              <input type="text" id="creditDeveloperInput" placeholder="Enter Developer Name or Handle (e.g. Media Ministry Tech Lead)...">
+            </div>
+            <div class="credit-item">
+              <label for="creditChurchInput">Church / Ministry Name:</label>
+              <input type="text" id="creditChurchInput" placeholder="Enter Church Name (e.g. Grace Community Church)...">
+            </div>
+          </div>
+          
+          <div class="about-notes-row">
+            <div class="about-tech-summary">
+              <span class="tech-pill">⚡ Zero Dependencies</span>
+              <span class="tech-pill">🔄 SSE Real-Time Sync</span>
+              <span class="tech-pill">🎨 3 Display Themes</span>
+              <span class="tech-pill">📡 OBS / vMix Ready</span>
+              <span class="tech-pill">🔔 Web Audio Chimes</span>
+            </div>
+            <button id="btnSaveCredits" class="purple-gradient-btn small-btn">Save Attribution</button>
+          </div>
+          <div id="creditSavedFeedback" class="credit-saved-feedback hidden">✓ Attribution credits saved successfully!</div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="/js/app.js"></script>
+</body>
+</html>
