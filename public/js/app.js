@@ -1053,24 +1053,259 @@ if (btnTestChime) {
   });
 }
 
-// ================= KEYBOARD & STREAM DECK SHORTCUTS =================
-window.addEventListener('keydown', (e) => {
-  if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.tagName === 'SELECT') return;
+// ================= OPERATOR HOTKEYS & STREAM DECK REMAPPING =================
+const DEFAULT_HOTKEYS = {
+  enabled: true,
+  bindings: {
+    startPause: { code: 'Space', key: ' ', display: 'Space' },
+    reset: { code: 'KeyR', key: 'r', display: 'R' },
+    nextItem: { code: 'KeyN', key: 'n', display: 'N' },
+    blackout: { code: 'KeyB', key: 'b', display: 'B' },
+    add1Min: { code: 'Equal', key: '+', display: '+' },
+    sub1Min: { code: 'Minus', key: '-', display: '-' }
+  }
+};
 
-  if (e.code === 'Space') {
+let hotkeysConfig = JSON.parse(JSON.stringify(DEFAULT_HOTKEYS));
+let currentlyRebindingAction = null;
+
+const chkHotkeysEnabled = document.getElementById('chkHotkeysEnabled');
+const hotkeysStatusBadge = document.getElementById('hotkeysStatusBadge');
+const hotkeysConfigContainer = document.getElementById('hotkeysConfigContainer');
+const hotkeyListeningNotice = document.getElementById('hotkeyListeningNotice');
+const btnResetDefaultHotkeys = document.getElementById('btnResetDefaultHotkeys');
+
+// Live Deck Hint Elements
+const kbdHintStartPause = document.getElementById('kbdHintStartPause');
+const kbdHintReset = document.getElementById('kbdHintReset');
+const kbdHintNext = document.getElementById('kbdHintNext');
+const kbdHintBlackout = document.getElementById('kbdHintBlackout');
+const kbdHintAdd1Min = document.getElementById('kbdHintAdd1Min');
+const kbdHintSub1Min = document.getElementById('kbdHintSub1Min');
+
+function formatKeyDisplay(code, key) {
+  if (code === 'Space') return 'Space';
+  if (code && code.startsWith('Key')) return code.slice(3).toUpperCase();
+  if (code && code.startsWith('Digit')) return code.slice(5);
+  if (code && code.startsWith('Numpad')) return 'Num ' + code.slice(6);
+  if (code && code.startsWith('Arrow')) return code.slice(5);
+  if (code === 'Minus' || key === '-') return '-';
+  if (code === 'Equal' || key === '+') return '+';
+  if (code === 'Backquote') return '~';
+  if (key && key.length === 1) return key.toUpperCase();
+  return code || key || '?';
+}
+
+function loadSavedHotkeys() {
+  try {
+    const saved = localStorage.getItem('grace_flow_hotkeys_config');
+    if (saved) {
+      const parsed = JSON.parse(saved);
+      hotkeysConfig = {
+        enabled: parsed.enabled !== undefined ? parsed.enabled : true,
+        bindings: Object.assign({}, DEFAULT_HOTKEYS.bindings, parsed.bindings || {})
+      };
+    }
+  } catch (e) {
+    console.warn('Could not parse saved hotkeys config, using defaults:', e);
+    hotkeysConfig = JSON.parse(JSON.stringify(DEFAULT_HOTKEYS));
+  }
+  updateHotkeysUI();
+}
+
+function saveHotkeysConfig() {
+  localStorage.setItem('grace_flow_hotkeys_config', JSON.stringify(hotkeysConfig));
+}
+
+function updateHotkeysUI() {
+  // Update toggle state
+  if (chkHotkeysEnabled) {
+    chkHotkeysEnabled.checked = !!hotkeysConfig.enabled;
+  }
+  if (hotkeysStatusBadge) {
+    if (hotkeysConfig.enabled) {
+      hotkeysStatusBadge.textContent = 'Hotkeys Enabled';
+      hotkeysStatusBadge.classList.add('active');
+      hotkeysStatusBadge.classList.remove('disabled');
+    } else {
+      hotkeysStatusBadge.textContent = 'Hotkeys Disabled';
+      hotkeysStatusBadge.classList.remove('active');
+      hotkeysStatusBadge.classList.add('disabled');
+    }
+  }
+  if (hotkeysConfigContainer) {
+    hotkeysConfigContainer.classList.toggle('is-disabled', !hotkeysConfig.enabled);
+  }
+
+  // Update Settings Rebind button badges
+  for (const [action, binding] of Object.entries(hotkeysConfig.bindings)) {
+    const badgeEl = document.getElementById(`hkDisplay_${action}`);
+    if (badgeEl) {
+      badgeEl.textContent = binding.display || formatKeyDisplay(binding.code, binding.key);
+    }
+  }
+
+  // Update Live Deck Hints
+  const b = hotkeysConfig.bindings;
+  if (kbdHintStartPause) kbdHintStartPause.textContent = b.startPause ? b.startPause.display : 'Space';
+  if (kbdHintReset) kbdHintReset.textContent = b.reset ? b.reset.display : 'R';
+  if (kbdHintNext) kbdHintNext.textContent = b.nextItem ? b.nextItem.display : 'N';
+  if (kbdHintBlackout) kbdHintBlackout.textContent = b.blackout ? b.blackout.display : 'B';
+  if (kbdHintAdd1Min) kbdHintAdd1Min.textContent = b.add1Min ? b.add1Min.display : '+';
+  if (kbdHintSub1Min) kbdHintSub1Min.textContent = b.sub1Min ? b.sub1Min.display : '-';
+
+  // Toggle .disabled class on all kbd hints
+  const allKbdHints = document.querySelectorAll('.kbd-hint');
+  allKbdHints.forEach(k => {
+    k.classList.toggle('disabled', !hotkeysConfig.enabled);
+  });
+}
+
+// Master Toggle Listener
+if (chkHotkeysEnabled) {
+  chkHotkeysEnabled.addEventListener('change', () => {
+    hotkeysConfig.enabled = chkHotkeysEnabled.checked;
+    saveHotkeysConfig();
+    updateHotkeysUI();
+  });
+}
+
+// Rebind Buttons Listeners
+document.querySelectorAll('.hotkey-rebind-btn').forEach(btn => {
+  btn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    const action = btn.dataset.action;
+    startRebinding(action, btn);
+  });
+});
+
+function startRebinding(action, btnElement) {
+  if (currentlyRebindingAction) {
+    stopRebinding();
+  }
+  currentlyRebindingAction = action;
+  btnElement.classList.add('recording');
+  const actionText = btnElement.querySelector('.hk-bind-action-text');
+  if (actionText) actionText.textContent = 'Press any key...';
+  if (hotkeyListeningNotice) hotkeyListeningNotice.classList.remove('hidden');
+}
+
+function stopRebinding() {
+  if (!currentlyRebindingAction) return;
+  const currentBtn = document.getElementById(`hkBtn_${currentlyRebindingAction}`);
+  if (currentBtn) {
+    currentBtn.classList.remove('recording');
+    const actionText = currentBtn.querySelector('.hk-bind-action-text');
+    if (actionText) actionText.textContent = 'Click to Rebind';
+  }
+  if (hotkeyListeningNotice) hotkeyListeningNotice.classList.add('hidden');
+  currentlyRebindingAction = null;
+}
+
+// Reset Default Hotkeys
+if (btnResetDefaultHotkeys) {
+  btnResetDefaultHotkeys.addEventListener('click', () => {
+    hotkeysConfig = JSON.parse(JSON.stringify(DEFAULT_HOTKEYS));
+    saveHotkeysConfig();
+    updateHotkeysUI();
+    stopRebinding();
+  });
+}
+
+// Global Keydown Handler (Dispatches hotkeys & captures rebinding)
+window.addEventListener('keydown', (e) => {
+  // 1. If currently in Rebinding Mode, capture this key
+  if (currentlyRebindingAction) {
     e.preventDefault();
-    btnStartPause.click();
-  } else if (e.key === 'r' || e.key === 'R') {
+    e.stopPropagation();
+    if (e.key === 'Escape') {
+      stopRebinding();
+      return;
+    }
+
+    const code = e.code;
+    const key = e.key;
+    const display = formatKeyDisplay(code, key);
+
+    hotkeysConfig.bindings[currentlyRebindingAction] = {
+      code,
+      key: key.length === 1 ? key.toLowerCase() : key,
+      display
+    };
+
+    saveHotkeysConfig();
+    updateHotkeysUI();
+    stopRebinding();
+    return;
+  }
+
+  // 2. Ignore if hotkeys are disabled globally
+  if (!hotkeysConfig.enabled) return;
+
+  // 3. Ignore if user is currently typing in an input / textarea / select
+  if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.tagName === 'SELECT') {
+    return;
+  }
+
+  // Helper matching function
+  const matches = (binding) => {
+    if (!binding) return false;
+    if (binding.code && e.code === binding.code) return true;
+    if (binding.key && (e.key === binding.key || e.key.toLowerCase() === binding.key.toLowerCase())) return true;
+    return false;
+  };
+
+  const b = hotkeysConfig.bindings;
+
+  // Start / Pause
+  if (matches(b.startPause)) {
     e.preventDefault();
-    btnStopReset.click();
-  } else if (e.key === 'n' || e.key === 'N') {
+    if (btnStartPause) btnStartPause.click();
+    return;
+  }
+
+  // Reset
+  if (matches(b.reset)) {
+    e.preventDefault();
+    if (btnStopReset) btnStopReset.click();
+    return;
+  }
+
+  // Next Item
+  if (matches(b.nextItem)) {
     e.preventDefault();
     if (btnCueNextItem && nextUpBanner && !nextUpBanner.classList.contains('hidden')) {
       btnCueNextItem.click();
     }
-  } else if (e.key === 'b' || e.key === 'B') {
+    return;
+  }
+
+  // Blackout
+  if (matches(b.blackout)) {
     e.preventDefault();
-    btnBlackout.click();
+    if (btnBlackout) btnBlackout.click();
+    return;
+  }
+
+  // Add 1 Min
+  if (matches(b.add1Min)) {
+    e.preventDefault();
+    if (btnAdd1Min) btnAdd1Min.click();
+    return;
+  }
+
+  // Subtract 1 Min
+  if (matches(b.sub1Min)) {
+    e.preventDefault();
+    if (btnSub1Min) btnSub1Min.click();
+    return;
+  }
+});
+
+// Click outside cancels rebinding
+window.addEventListener('click', (e) => {
+  if (currentlyRebindingAction && !e.target.closest('.hotkey-rebind-btn')) {
+    stopRebinding();
   }
 });
 
@@ -1114,3 +1349,4 @@ loadSchedule();
 loadTemplates();
 fetchNetworkInfo();
 loadSavedCredits();
+loadSavedHotkeys();

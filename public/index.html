@@ -45,7 +45,7 @@
 
       <!-- Quick Emergency Blackout Button -->
       <button id="btnBlackout" class="action-btn blackout-btn" title="Blank Stage Screen (B)">
-        <span class="btn-icon">👁️‍🗨️</span> Blackout <kbd class="kbd-hint">B</kbd>
+        <span class="btn-icon">👁️‍🗨️</span> Blackout <kbd class="kbd-hint" id="kbdHintBlackout">B</kbd>
       </button>
 
       <!-- Persistent Second Screen Button -->
@@ -75,7 +75,7 @@
               <span class="next-up-label">NEXT UP:</span>
               <span id="nextUpTitle" class="next-up-title">--</span>
               <button id="btnCueNextItem" class="cue-next-btn" title="Cue and load next item (N)">
-                Cue Next ▶ <kbd class="kbd-hint">N</kbd>
+                Cue Next ▶ <kbd class="kbd-hint" id="kbdHintNext">N</kbd>
               </button>
             </div>
           </div>
@@ -153,20 +153,20 @@
 
         <!-- Primary Play/Pause/Reset Controls -->
         <div class="primary-controls-row">
-          <button id="btnStartPause" class="ctrl-btn play-btn" title="Start / Pause Countdown (Space)">
+          <button id="btnStartPause" class="ctrl-btn play-btn" title="Start / Pause Countdown">
             <span class="ctrl-icon">▶</span> <span id="btnStartPauseText">Start</span>
-            <kbd class="kbd-hint">Space</kbd>
+            <kbd class="kbd-hint" id="kbdHintStartPause">Space</kbd>
           </button>
-          <button id="btnStopReset" class="ctrl-btn reset-btn" title="Reset to Beginning (R)">
+          <button id="btnStopReset" class="ctrl-btn reset-btn" title="Reset to Beginning">
             <span class="ctrl-icon">↺</span> Reset
-            <kbd class="kbd-hint">R</kbd>
+            <kbd class="kbd-hint" id="kbdHintReset">R</kbd>
           </button>
           <button id="btnAudioChimeToggle" class="sound-toggle-btn active" title="Toggle Soft Audio Bell on Time's Up">
             <span id="soundIcon">🔔</span>
           </button>
           <div class="time-adjust-group">
-            <button id="btnSub1Min" class="sub-ctrl-btn" title="Subtract 1 minute">-1m</button>
-            <button id="btnAdd1Min" class="sub-ctrl-btn" title="Add 1 minute">+1m</button>
+            <button id="btnSub1Min" class="sub-ctrl-btn" title="Subtract 1 minute">-1m <kbd class="kbd-hint" id="kbdHintSub1Min">-</kbd></button>
+            <button id="btnAdd1Min" class="sub-ctrl-btn" title="Add 1 minute">+1m <kbd class="kbd-hint" id="kbdHintAdd1Min">+</kbd></button>
             <button id="btnAdd5Min" class="sub-ctrl-btn" title="Add 5 minutes">+5m</button>
           </div>
         </div>
@@ -453,7 +453,112 @@
         </div>
       </div>
 
-      <!-- Section 5: About & Credits -->
+      <!-- Section 5: Operator Hotkeys & Stream Deck Shortcuts -->
+      <div class="card settings-card">
+        <div class="settings-card-header">
+          <div class="setting-icon">⌨️</div>
+          <div class="setting-header-content">
+            <div class="setting-title-with-toggle">
+              <div>
+                <h3>Operator Hotkeys & Keyboard Remapping</h3>
+                <p class="setting-desc">Configure or disable keyboard shortcuts to prevent accidental triggers or map to Stream Deck / hardware remotes.</p>
+              </div>
+              <div class="hotkey-toggle-wrapper">
+                <label class="switch-toggle" title="Enable or disable all keyboard shortcuts">
+                  <input type="checkbox" id="chkHotkeysEnabled" checked>
+                  <span class="slider round"></span>
+                </label>
+                <span id="hotkeysStatusBadge" class="hotkey-active-badge active">Hotkeys Enabled</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="hotkeysConfigContainer" class="hotkeys-config-box">
+          <div class="hotkeys-grid">
+            <!-- Start / Pause -->
+            <div class="hotkey-item-row">
+              <div class="hotkey-info">
+                <strong>Start / Pause Countdown</strong>
+                <span>Toggles live timer between running and paused</span>
+              </div>
+              <button class="hotkey-rebind-btn" data-action="startPause" id="hkBtn_startPause">
+                <span class="hk-key-badge" id="hkDisplay_startPause">Space</span>
+                <span class="hk-bind-action-text">Click to Rebind</span>
+              </button>
+            </div>
+
+            <!-- Reset to Beginning -->
+            <div class="hotkey-item-row">
+              <div class="hotkey-info">
+                <strong>Reset to Beginning</strong>
+                <span>Restores timer back to initial session minutes</span>
+              </div>
+              <button class="hotkey-rebind-btn" data-action="reset" id="hkBtn_reset">
+                <span class="hk-key-badge" id="hkDisplay_reset">R</span>
+                <span class="hk-bind-action-text">Click to Rebind</span>
+              </button>
+            </div>
+
+            <!-- Advance to Next Item -->
+            <div class="hotkey-item-row">
+              <div class="hotkey-info">
+                <strong>Advance to Next Item</strong>
+                <span>Cues & starts next scheduled run-of-show item</span>
+              </div>
+              <button class="hotkey-rebind-btn" data-action="nextItem" id="hkBtn_nextItem">
+                <span class="hk-key-badge" id="hkDisplay_nextItem">N</span>
+                <span class="hk-bind-action-text">Click to Rebind</span>
+              </button>
+            </div>
+
+            <!-- Stage Blackout -->
+            <div class="hotkey-item-row">
+              <div class="hotkey-info">
+                <strong>Stage Blackout Toggle</strong>
+                <span>Instantly blanks out stage confidence screen</span>
+              </div>
+              <button class="hotkey-rebind-btn" data-action="blackout" id="hkBtn_blackout">
+                <span class="hk-key-badge" id="hkDisplay_blackout">B</span>
+                <span class="hk-bind-action-text">Click to Rebind</span>
+              </button>
+            </div>
+
+            <!-- Add +1 Minute -->
+            <div class="hotkey-item-row">
+              <div class="hotkey-info">
+                <strong>Add +1 Minute (+60s)</strong>
+                <span>Quickly extends the active countdown by 1 min</span>
+              </div>
+              <button class="hotkey-rebind-btn" data-action="add1Min" id="hkBtn_add1Min">
+                <span class="hk-key-badge" id="hkDisplay_add1Min">+</span>
+                <span class="hk-bind-action-text">Click to Rebind</span>
+              </button>
+            </div>
+
+            <!-- Subtract -1 Minute -->
+            <div class="hotkey-item-row">
+              <div class="hotkey-info">
+                <strong>Subtract -1 Minute (-60s)</strong>
+                <span>Deducts 1 minute from active countdown</span>
+              </div>
+              <button class="hotkey-rebind-btn" data-action="sub1Min" id="hkBtn_sub1Min">
+                <span class="hk-key-badge" id="hkDisplay_sub1Min">-</span>
+                <span class="hk-bind-action-text">Click to Rebind</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="hotkeys-footer-bar">
+            <div id="hotkeyListeningNotice" class="hotkey-listening-notice hidden">
+              <span class="pulse-indicator">●</span> Listening for key press... (Press any key on keyboard or Stream Deck, or <strong>Esc</strong> to cancel)
+            </div>
+            <button id="btnResetDefaultHotkeys" class="outline-btn small-btn">↺ Reset to Default Keys</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 6: About & Credits -->
       <div class="card settings-card">
         <div class="settings-card-header">
           <div class="setting-icon">✨</div>
