@@ -1309,38 +1309,117 @@ window.addEventListener('click', (e) => {
   }
 });
 
-// About & Credits Attribution Management
-const creditDeveloperInput = document.getElementById('creditDeveloperInput');
+// Creator Attribution & Church Customization
 const creditChurchInput = document.getElementById('creditChurchInput');
-const btnSaveCredits = document.getElementById('btnSaveCredits');
-const creditSavedFeedback = document.getElementById('creditSavedFeedback');
+const btnSaveChurchName = document.getElementById('btnSaveChurchName');
+const churchSavedFeedback = document.getElementById('churchSavedFeedback');
 
-function loadSavedCredits() {
-  if (creditDeveloperInput) {
-    const dev = localStorage.getItem('grace_flow_credit_dev');
-    if (dev) creditDeveloperInput.value = dev;
-  }
+function loadSavedChurchName() {
   if (creditChurchInput) {
-    const church = localStorage.getItem('grace_flow_credit_church');
+    const church = localStorage.getItem('grace_flow_church_name');
     if (church) creditChurchInput.value = church;
   }
 }
 
-if (btnSaveCredits) {
-  btnSaveCredits.addEventListener('click', () => {
-    if (creditDeveloperInput) {
-      localStorage.setItem('grace_flow_credit_dev', creditDeveloperInput.value.trim());
-    }
+if (btnSaveChurchName) {
+  btnSaveChurchName.addEventListener('click', () => {
     if (creditChurchInput) {
-      localStorage.setItem('grace_flow_credit_church', creditChurchInput.value.trim());
+      localStorage.setItem('grace_flow_church_name', creditChurchInput.value.trim());
     }
-    if (creditSavedFeedback) {
-      creditSavedFeedback.classList.remove('hidden');
+    if (churchSavedFeedback) {
+      churchSavedFeedback.classList.remove('hidden');
       setTimeout(() => {
-        creditSavedFeedback.classList.add('hidden');
+        churchSavedFeedback.classList.add('hidden');
       }, 3000);
     }
   });
+}
+
+// Software Update Checker (for Desktop App and Web on Render)
+const CURRENT_VERSION = '1.0.0';
+const btnCheckUpdates = document.getElementById('btnCheckUpdates');
+const versionStatusPill = document.getElementById('versionStatusPill');
+const updateStatusBanner = document.getElementById('updateStatusBanner');
+
+function compareVersions(v1, v2) {
+  const p1 = (v1 || '').replace(/^v/, '').split('.').map(Number);
+  const p2 = (v2 || '').replace(/^v/, '').split('.').map(Number);
+  for (let i = 0; i < Math.max(p1.length, p2.length); i++) {
+    const num1 = p1[i] || 0;
+    const num2 = p2[i] || 0;
+    if (num1 > num2) return 1;
+    if (num1 < num2) return -1;
+  }
+  return 0;
+}
+
+async function checkForUpdates(isUserClick = false) {
+  if (isUserClick && btnCheckUpdates) {
+    btnCheckUpdates.textContent = 'Checking...';
+    btnCheckUpdates.disabled = true;
+  }
+
+  try {
+    const res = await fetch('/api/version');
+    const data = await res.json();
+    const latestVersion = data.latestVersion || CURRENT_VERSION;
+    const isNewer = compareVersions(latestVersion, CURRENT_VERSION) > 0;
+
+    if (isNewer) {
+      if (versionStatusPill) {
+        versionStatusPill.textContent = `🚀 v${latestVersion} Available!`;
+        versionStatusPill.style.background = 'rgba(245, 158, 11, 0.2)';
+        versionStatusPill.style.color = '#f59e0b';
+      }
+      if (updateStatusBanner) {
+        updateStatusBanner.className = 'update-status-banner has-update';
+        updateStatusBanner.innerHTML = `
+          <div>
+            <strong>Update Available: Grace Flow v${latestVersion}</strong>
+            <p style="margin: 4px 0 0; font-size: 12px;">A new version is ready. Pull the latest code on GitHub or redeploy on Render!</p>
+          </div>
+          <a href="https://github.com/mayowapeter/grace-flow/releases" target="_blank" class="outline-btn small-btn">Get v${latestVersion} ➔</a>
+        `;
+        updateStatusBanner.classList.remove('hidden');
+      }
+    } else {
+      if (versionStatusPill) {
+        versionStatusPill.textContent = `● v${CURRENT_VERSION} Up to Date`;
+        versionStatusPill.style.background = 'rgba(16, 185, 129, 0.12)';
+        versionStatusPill.style.color = '#10b981';
+      }
+      if (isUserClick && updateStatusBanner) {
+        updateStatusBanner.className = 'update-status-banner';
+        updateStatusBanner.innerHTML = `
+          <div>
+            <strong>✓ You are running the latest version of Grace Flow (v${CURRENT_VERSION})!</strong>
+            <p style="margin: 4px 0 0; font-size: 12px;">Built by Peter Olatunji (@__mayowapeter).</p>
+          </div>
+        `;
+        updateStatusBanner.classList.remove('hidden');
+        setTimeout(() => {
+          updateStatusBanner.classList.add('hidden');
+        }, 5000);
+      }
+    }
+  } catch (err) {
+    console.warn('Update check error:', err);
+    if (isUserClick && updateStatusBanner) {
+      updateStatusBanner.className = 'update-status-banner';
+      updateStatusBanner.textContent = `Grace Flow v${CURRENT_VERSION} is running smoothly offline.`;
+      updateStatusBanner.classList.remove('hidden');
+      setTimeout(() => updateStatusBanner.classList.add('hidden'), 4000);
+    }
+  } finally {
+    if (btnCheckUpdates) {
+      btnCheckUpdates.textContent = '🔄 Check for Updates';
+      btnCheckUpdates.disabled = false;
+    }
+  }
+}
+
+if (btnCheckUpdates) {
+  btnCheckUpdates.addEventListener('click', () => checkForUpdates(true));
 }
 
 // Init on load
@@ -1348,5 +1427,6 @@ setupSSE();
 loadSchedule();
 loadTemplates();
 fetchNetworkInfo();
-loadSavedCredits();
+loadSavedChurchName();
 loadSavedHotkeys();
+checkForUpdates(false);

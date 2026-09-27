@@ -1829,31 +1829,124 @@ body {
   letter-spacing: 0.02em;
 }
 
-.about-credits-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 16px;
+/* Version Badge Container */
+.version-badge-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
-@media (max-width: 640px) {
-  .about-credits-grid {
-    grid-template-columns: 1fr;
-  }
+/* Creator Spotlight Card */
+.creator-spotlight-box {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  background: linear-gradient(135deg, rgba(139, 92, 246, 0.12) 0%, rgba(99, 102, 241, 0.08) 100%);
+  border: 1px solid rgba(139, 92, 246, 0.35);
+  border-radius: 14px;
+  padding: 20px 24px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
 }
 
-.credit-item {
+.creator-badge-icon {
+  font-size: 42px;
+  width: 64px;
+  height: 64px;
+  border-radius: 16px;
+  background: rgba(139, 92, 246, 0.2);
+  border: 1px solid rgba(139, 92, 246, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.creator-details {
   display: flex;
   flex-direction: column;
   gap: 6px;
+  flex: 1;
 }
 
-.credit-item label {
+.creator-title-tag {
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  color: #a78bfa;
+  text-transform: uppercase;
+}
+
+.creator-fullname {
+  font-size: 20px;
+  font-weight: 900;
+  color: #ffffff;
+  letter-spacing: -0.02em;
+  margin: 0;
+}
+
+.creator-statement {
+  font-size: 13px;
+  color: var(--text-muted);
+  line-height: 1.45;
+  margin: 0;
+}
+
+.creator-social-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 4px;
+}
+
+.instagram-creator-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: linear-gradient(135deg, #833ab4 0%, #fd1d1d 50%, #fcb045 100%);
+  color: #ffffff !important;
+  text-decoration: none;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 6px 14px;
+  border-radius: 9999px;
+  box-shadow: 0 2px 8px rgba(225, 48, 108, 0.35);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.instagram-creator-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(225, 48, 108, 0.55);
+}
+
+.ig-arrow {
+  font-size: 11px;
+  opacity: 0.85;
+}
+
+/* Church Custom Section */
+.church-custom-section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background: var(--bg-card-subtle);
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  padding: 14px 18px;
+}
+
+.church-custom-section label {
   font-size: 12px;
   font-weight: 700;
   color: #a5b4fc;
 }
 
-.credit-item input {
+.church-input-row {
+  display: flex;
+  gap: 10px;
+}
+
+.church-input-row input {
+  flex: 1;
   background: var(--bg-input);
   border: 1px solid var(--border-color);
   border-radius: 8px;
@@ -1861,11 +1954,37 @@ body {
   font-size: 13px;
   color: var(--text-main);
   outline: none;
-  transition: border-color 0.15s ease;
 }
 
-.credit-item input:focus {
+.church-input-row input:focus {
   border-color: var(--primary-accent);
+}
+
+/* Update Notification Banner */
+.update-status-banner {
+  background: rgba(16, 185, 129, 0.12);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  border-radius: 10px;
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 13px;
+  color: #10b981;
+}
+
+.update-status-banner.has-update {
+  background: rgba(245, 158, 11, 0.14);
+  border-color: rgba(245, 158, 11, 0.4);
+  color: #f59e0b;
+}
+
+@media (max-width: 640px) {
+  .creator-spotlight-box {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 }
 
 .about-notes-row {

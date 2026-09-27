@@ -165,6 +165,21 @@ const server = http.createServer((req, res) => {
     return;
   }
 
+  // Version and system attribution endpoint
+  if (pathname === '/api/version' && req.method === 'GET') {
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({
+      name: 'Grace Flow',
+      version: '1.0.0',
+      author: 'Peter Olatunji',
+      instagram: '@__mayowapeter',
+      instagramUrl: 'https://instagram.com/__mayowapeter',
+      releaseDate: '2026-09-27',
+      latestVersion: '1.0.0'
+    }));
+    return;
+  }
+
   // Get current state
   if (pathname === '/api/state' && req.method === 'GET') {
     res.writeHead(200, { 'Content-Type': 'application/json' });

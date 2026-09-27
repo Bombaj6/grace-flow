@@ -558,13 +558,21 @@
         </div>
       </div>
 
-      <!-- Section 6: About & Credits -->
+      <!-- Section 6: About & Creator Credits -->
       <div class="card settings-card">
         <div class="settings-card-header">
           <div class="setting-icon">✨</div>
-          <div>
-            <h3>About & System Credits</h3>
-            <p class="setting-desc">Software details, church media team attribution, and development credits.</p>
+          <div class="setting-header-content">
+            <div class="setting-title-with-toggle">
+              <div>
+                <h3>About & Creator Attribution</h3>
+                <p class="setting-desc">Official software credentials, lead developer spotlight, and live version status.</p>
+              </div>
+              <div class="version-badge-container">
+                <span id="versionStatusPill" class="status-ready-pill">● v1.0.0 Latest</span>
+                <button id="btnCheckUpdates" class="outline-btn small-btn" title="Check for new software releases">🔄 Check for Updates</button>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -574,21 +582,42 @@
               <span class="app-logo-symbol">🕊️</span>
               <div class="app-title-group">
                 <h4>Grace Flow</h4>
-                <span class="app-edition-tag">Stage Countdown & Service Flow System • v1.0</span>
+                <span class="app-edition-tag">Stage Countdown & Service Flow System • <strong id="appCurrentVersion">v1.0.0</strong></span>
               </div>
             </div>
-            <span class="status-ready-pill">● Production Ready</span>
+            <span class="status-ready-pill">● Production Release</span>
           </div>
 
-          <div class="about-credits-grid">
-            <div class="credit-item">
-              <label for="creditDeveloperInput">Built By / Lead Developer:</label>
-              <input type="text" id="creditDeveloperInput" placeholder="Enter Developer Name or Handle (e.g. Media Ministry Tech Lead)...">
+          <!-- Permanent Creator Spotlight (Non-editable) -->
+          <div class="creator-spotlight-box">
+            <div class="creator-badge-icon">👨🏾‍💻</div>
+            <div class="creator-details">
+              <span class="creator-title-tag">LEAD CREATOR & SOFTWARE ARCHITECT</span>
+              <h3 class="creator-fullname">Peter Olatunji</h3>
+              <p class="creator-statement">Designed and built specifically for church media production teams, live broadcasts, and worship leaders worldwide.</p>
+              <div class="creator-social-row">
+                <a href="https://instagram.com/__mayowapeter" target="_blank" rel="noopener noreferrer" class="instagram-creator-btn">
+                  <span class="ig-icon">📸</span>
+                  <span>Instagram: <strong>@__mayowapeter</strong></span>
+                  <span class="ig-arrow">↗</span>
+                </a>
+              </div>
             </div>
-            <div class="credit-item">
-              <label for="creditChurchInput">Church / Ministry Name:</label>
-              <input type="text" id="creditChurchInput" placeholder="Enter Church Name (e.g. Grace Community Church)...">
+          </div>
+
+          <!-- Local Church Customization -->
+          <div class="church-custom-section">
+            <label for="creditChurchInput">Local Church / Ministry Name (Optional):</label>
+            <div class="church-input-row">
+              <input type="text" id="creditChurchInput" placeholder="Enter your Church / Ministry Name (e.g. Grace Community Church)...">
+              <button id="btnSaveChurchName" class="purple-gradient-btn small-btn">Save Church</button>
             </div>
+            <div id="churchSavedFeedback" class="credit-saved-feedback hidden">✓ Church name saved!</div>
+          </div>
+
+          <!-- Update Status Notification Banner (shown on update check) -->
+          <div id="updateStatusBanner" class="update-status-banner hidden">
+            <!-- Populated via JS -->
           </div>
           
           <div class="about-notes-row">
@@ -598,10 +627,10 @@
               <span class="tech-pill">🎨 3 Display Themes</span>
               <span class="tech-pill">📡 OBS / vMix Ready</span>
               <span class="tech-pill">🔔 Web Audio Chimes</span>
+              <span class="tech-pill">☁️ Render Cloud Ready</span>
+              <span class="tech-pill">💻 macOS Desktop & Windows</span>
             </div>
-            <button id="btnSaveCredits" class="purple-gradient-btn small-btn">Save Attribution</button>
           </div>
-          <div id="creditSavedFeedback" class="credit-saved-feedback hidden">✓ Attribution credits saved successfully!</div>
         </div>
       </div>
     </div>

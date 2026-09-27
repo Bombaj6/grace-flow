@@ -110,3 +110,19 @@ Depending on your church's tech setup, here are the 4 recommended distribution p
 - <kbd>B</kbd>: Toggle Stage Blackout
 - Double-Click (on Stage Screen): Toggle Fullscreen
 
+---
+
+## 👨🏾‍💻 Built By & Credits
+
+**Grace Flow** was designed, architected, and built by:
+- **Lead Creator**: Peter Olatunji
+- **Instagram**: [@\_\_mayowapeter](https://instagram.com/__mayowapeter)
+
+---
+
+## 🔄 Updates & Upgrades
+
+- **On Render (Web Version)**: Whenever you push new code to your connected GitHub repository (`git push origin main`), Render automatically detects the changes and redeploys the updated version in ~60 seconds with zero downtime!
+- **On Desktop App**: Grace Flow includes an in-app **"🔄 Check for Updates"** tool in the **Settings Deck** that checks for new releases so users always know when a new version is available.
+
+
