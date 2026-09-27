@@ -1414,7 +1414,7 @@ async function checkForUpdates(isUserClick = false) {
     // 2. If online, check remote repository package.json for newest release
     if (navigator.onLine) {
       try {
-        const remoteRes = await fetch('https://raw.githubusercontent.com/mayowapeter/grace-flow/main/package.json', { cache: 'no-store' });
+        const remoteRes = await fetch('https://raw.githubusercontent.com/Bombaj6/grace-flow/main/package.json', { cache: 'no-store' });
         if (remoteRes.ok) {
           const remotePkg = await remoteRes.json();
           if (remotePkg && remotePkg.version) {
