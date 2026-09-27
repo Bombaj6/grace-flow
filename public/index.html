@@ -596,9 +596,9 @@
               <h3 class="creator-fullname">Peter Olatunji</h3>
               <p class="creator-statement">Designed and built specifically for church media production teams, live broadcasts, and worship leaders worldwide.</p>
               <div class="creator-social-row">
-                <a href="https://instagram.com/__mayowapeter" target="_blank" rel="noopener noreferrer" class="instagram-creator-btn">
+                <a href="https://instagram.com/_mayowapeter" target="_blank" rel="noopener noreferrer" class="instagram-creator-btn">
                   <span class="ig-icon">📸</span>
-                  <span>Instagram: <strong>@__mayowapeter</strong></span>
+                  <span>Instagram: <strong>@_mayowapeter</strong></span>
                   <span class="ig-arrow">↗</span>
                 </a>
               </div>
@@ -635,6 +635,55 @@
       </div>
     </div>
   </main>
+
+  <!-- ================= UPDATE NOTIFICATION MODAL POP-UP ================= -->
+  <div id="updateModalOverlay" class="modal-overlay hidden">
+    <div class="modal-card update-modal-card">
+      <div class="update-modal-header">
+        <div class="update-icon-badge">🚀</div>
+        <div class="update-header-text">
+          <h3>Software Update Available!</h3>
+          <span class="update-version-subtitle">A newer version of Grace Flow is ready</span>
+        </div>
+        <button id="btnCloseUpdateModal" class="modal-close-btn" title="Close">✕</button>
+      </div>
+
+      <div class="update-modal-body">
+        <div class="version-comparison-row">
+          <div class="version-chip current">
+            <span class="v-label">Installed Version:</span>
+            <strong id="modalCurrentVersion">v1.0.0</strong>
+          </div>
+          <span class="v-arrow">➔</span>
+          <div class="version-chip latest">
+            <span class="v-label">Latest Version:</span>
+            <strong id="modalLatestVersion">v1.1.0</strong>
+          </div>
+        </div>
+
+        <div class="release-highlights-box">
+          <h4>💡 What's New in This Release:</h4>
+          <ul id="modalReleaseNotesList" class="release-notes-list">
+            <li>New features, reliability improvements, and UI refinements.</li>
+            <li>Performance optimizations for confidence monitors and NDI feeds.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="update-modal-footer">
+        <label class="skip-version-checkbox">
+          <input type="checkbox" id="chkSkipThisUpdate">
+          <span>Don't remind me again for this version</span>
+        </label>
+        <div class="modal-btn-group">
+          <button id="btnDismissUpdate" class="outline-btn small-btn">Remind Me Later</button>
+          <a id="btnDownloadUpdate" href="https://github.com/mayowapeter/grace-flow/releases/latest" target="_blank" rel="noopener noreferrer" class="purple-gradient-btn small-btn">
+            Download Update ➔
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <script src="/js/app.js"></script>
 </body>

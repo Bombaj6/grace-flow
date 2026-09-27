@@ -116,7 +116,7 @@ Depending on your church's tech setup, here are the 4 recommended distribution p
 
 **Grace Flow** was designed, architected, and built by:
 - **Lead Creator**: Peter Olatunji
-- **Instagram**: [@\_\_mayowapeter](https://instagram.com/__mayowapeter)
+- **Instagram**: [@\_mayowapeter](https://instagram.com/_mayowapeter)
 
 ---
 

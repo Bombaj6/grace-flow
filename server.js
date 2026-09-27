@@ -172,8 +172,8 @@ const server = http.createServer((req, res) => {
       name: 'Grace Flow',
       version: '1.0.0',
       author: 'Peter Olatunji',
-      instagram: '@__mayowapeter',
-      instagramUrl: 'https://instagram.com/__mayowapeter',
+      instagram: '@_mayowapeter',
+      instagramUrl: 'https://instagram.com/_mayowapeter',
       releaseDate: '2026-09-27',
       latestVersion: '1.0.0'
     }));

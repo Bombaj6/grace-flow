@@ -1353,6 +1353,47 @@ function compareVersions(v1, v2) {
   return 0;
 }
 
+// Modal Elements
+const updateModalOverlay = document.getElementById('updateModalOverlay');
+const btnCloseUpdateModal = document.getElementById('btnCloseUpdateModal');
+const btnDismissUpdate = document.getElementById('btnDismissUpdate');
+const btnDownloadUpdate = document.getElementById('btnDownloadUpdate');
+const modalCurrentVersion = document.getElementById('modalCurrentVersion');
+const modalLatestVersion = document.getElementById('modalLatestVersion');
+const chkSkipThisUpdate = document.getElementById('chkSkipThisUpdate');
+const modalReleaseNotesList = document.getElementById('modalReleaseNotesList');
+
+let pendingUpdateVersion = null;
+
+function showUpdateModal(latestVer, releaseNotes) {
+  pendingUpdateVersion = latestVer;
+  if (modalCurrentVersion) modalCurrentVersion.textContent = `v${CURRENT_VERSION}`;
+  if (modalLatestVersion) modalLatestVersion.textContent = `v${latestVer}`;
+  if (releaseNotes && modalReleaseNotesList) {
+    if (Array.isArray(releaseNotes)) {
+      modalReleaseNotesList.innerHTML = releaseNotes.map(n => `<li>${n}</li>`).join('');
+    } else if (typeof releaseNotes === 'string') {
+      modalReleaseNotesList.innerHTML = `<li>${releaseNotes}</li>`;
+    }
+  }
+  if (updateModalOverlay) updateModalOverlay.classList.remove('hidden');
+}
+
+function hideUpdateModal() {
+  if (updateModalOverlay) updateModalOverlay.classList.add('hidden');
+  if (chkSkipThisUpdate && chkSkipThisUpdate.checked && pendingUpdateVersion) {
+    localStorage.setItem('grace_flow_dismissed_update', pendingUpdateVersion);
+  }
+}
+
+if (btnCloseUpdateModal) btnCloseUpdateModal.addEventListener('click', hideUpdateModal);
+if (btnDismissUpdate) btnDismissUpdate.addEventListener('click', hideUpdateModal);
+if (updateModalOverlay) {
+  updateModalOverlay.addEventListener('click', (e) => {
+    if (e.target === updateModalOverlay) hideUpdateModal();
+  });
+}
+
 async function checkForUpdates(isUserClick = false) {
   if (isUserClick && btnCheckUpdates) {
     btnCheckUpdates.textContent = 'Checking...';
@@ -1360,9 +1401,31 @@ async function checkForUpdates(isUserClick = false) {
   }
 
   try {
+    // 1. Fetch local server version
     const res = await fetch('/api/version');
-    const data = await res.json();
-    const latestVersion = data.latestVersion || CURRENT_VERSION;
+    const localData = await res.json();
+    let latestVersion = localData.latestVersion || CURRENT_VERSION;
+    let releaseNotes = [
+      "Latest UI and performance improvements.",
+      "Optimized stage confidence monitors and OBS/vMix alpha feeds.",
+      "Multi-monitor second screen stability enhancements."
+    ];
+
+    // 2. If online, check remote repository package.json for newest release
+    if (navigator.onLine) {
+      try {
+        const remoteRes = await fetch('https://raw.githubusercontent.com/mayowapeter/grace-flow/main/package.json', { cache: 'no-store' });
+        if (remoteRes.ok) {
+          const remotePkg = await remoteRes.json();
+          if (remotePkg && remotePkg.version) {
+            latestVersion = remotePkg.version;
+          }
+        }
+      } catch (remoteErr) {
+        // Fall back gracefully if offline or repo not yet live
+      }
+    }
+
     const isNewer = compareVersions(latestVersion, CURRENT_VERSION) > 0;
 
     if (isNewer) {
@@ -1376,11 +1439,23 @@ async function checkForUpdates(isUserClick = false) {
         updateStatusBanner.innerHTML = `
           <div>
             <strong>Update Available: Grace Flow v${latestVersion}</strong>
-            <p style="margin: 4px 0 0; font-size: 12px;">A new version is ready. Pull the latest code on GitHub or redeploy on Render!</p>
+            <p style="margin: 4px 0 0; font-size: 12px;">A new version is ready. Pull latest code on GitHub or update your desktop app!</p>
           </div>
-          <a href="https://github.com/mayowapeter/grace-flow/releases" target="_blank" class="outline-btn small-btn">Get v${latestVersion} ➔</a>
+          <button id="btnOpenUpdateDetails" class="outline-btn small-btn">View Details ➔</button>
         `;
         updateStatusBanner.classList.remove('hidden');
+        const btnOpenUpdateDetails = document.getElementById('btnOpenUpdateDetails');
+        if (btnOpenUpdateDetails) {
+          btnOpenUpdateDetails.addEventListener('click', () => showUpdateModal(latestVersion, releaseNotes));
+        }
+      }
+
+      // Check if user dismissed this version or if timer is currently running live
+      const dismissedVer = localStorage.getItem('grace_flow_dismissed_update');
+      const isTimerRunning = currentState && currentState.status === 'running';
+
+      if (!isTimerRunning && (isUserClick || dismissedVer !== latestVersion)) {
+        showUpdateModal(latestVersion, releaseNotes);
       }
     } else {
       if (versionStatusPill) {
@@ -1393,7 +1468,7 @@ async function checkForUpdates(isUserClick = false) {
         updateStatusBanner.innerHTML = `
           <div>
             <strong>✓ You are running the latest version of Grace Flow (v${CURRENT_VERSION})!</strong>
-            <p style="margin: 4px 0 0; font-size: 12px;">Built by Peter Olatunji (@__mayowapeter).</p>
+            <p style="margin: 4px 0 0; font-size: 12px;">Built by Peter Olatunji (@_mayowapeter).</p>
           </div>
         `;
         updateStatusBanner.classList.remove('hidden');
@@ -1429,4 +1504,10 @@ loadTemplates();
 fetchNetworkInfo();
 loadSavedChurchName();
 loadSavedHotkeys();
-checkForUpdates(false);
+
+// Automatic startup check when connected to internet (after 1.5s delay)
+setTimeout(() => {
+  if (navigator.onLine) {
+    checkForUpdates(false);
+  }
+}, 1500);
