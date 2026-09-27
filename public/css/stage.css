@@ -164,14 +164,15 @@ body.mode-analog .stage-footer {
 /* ================= 2. ANALOG / CIRCULAR RING VIEW (MATCHING USER IMAGE 1) ================= */
 .circular-countdown-wrapper {
   position: relative;
-  width: min(84vh, 84vw);
-  height: min(84vh, 84vw);
+  width: min(82vh, 82vw);
+  height: min(82vh, 82vw);
   max-width: 86vw;
   max-height: 86vh;
   display: flex;
   align-items: center;
   justify-content: center;
   margin: auto;
+  container-type: inline-size;
 }
 
 .circular-countdown-svg {
@@ -218,38 +219,45 @@ body.mode-analog .stage-footer {
   align-items: center;
   justify-content: center;
   pointer-events: none;
-  padding: 0 12%;
+  padding: 0 14%;
+  box-sizing: border-box;
 }
 
 .ring-digits {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
-  font-size: clamp(3rem, 16vh, 8.5rem);
+  font-size: clamp(1.2rem, 14.5vh, 8.5rem);
+  font-size: 18cqi;
   font-weight: 850;
   line-height: 1;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.03em;
   color: #ffffff;
   text-shadow: 0 0 35px rgba(255, 255, 255, 0.45);
   font-variant-numeric: tabular-nums;
   text-align: center;
-  max-width: 100%;
+  max-width: 76%;
+  white-space: nowrap;
 }
 
 .ring-digits.digits-long {
-  font-size: clamp(2.2rem, 11.5vh, 6.2rem);
+  font-size: clamp(0.9rem, 10.5vh, 6rem);
+  font-size: 13cqi;
+  max-width: 80%;
 }
 
 .ring-subtitle {
-  font-size: clamp(0.9rem, 2.8vh, 1.8rem);
+  font-size: clamp(0.55rem, 2.5vh, 1.6rem);
+  font-size: 3.5cqi;
   font-weight: 700;
-  letter-spacing: 0.3em;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
   color: #94a3b8;
-  margin-top: 14px;
+  margin-top: 8px;
   text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
   white-space: nowrap;
-  max-width: 90%;
+  max-width: 66%;
   overflow: hidden;
   text-overflow: ellipsis;
+  text-align: center;
 }
 
 /* Mirror Preview Mode in Operator Panel */
@@ -262,20 +270,30 @@ body.preview-mode .stage-viewport {
 }
 
 body.preview-mode .circular-countdown-wrapper {
-  width: min(65vh, 65vw) !important;
-  height: min(65vh, 65vw) !important;
-  max-width: 82vw !important;
-  max-height: 82vh !important;
+  width: min(80vh, 80vw) !important;
+  height: min(80vh, 80vw) !important;
+  max-width: 84vw !important;
+  max-height: 84vh !important;
 }
 
 body.preview-mode .ring-digits {
-  font-size: clamp(2rem, 11vw, 4.2rem) !important;
+  font-size: clamp(0.9rem, 14vh, 3.5rem) !important;
+  font-size: 18cqi !important;
+  max-width: 74% !important;
+}
+
+body.preview-mode .ring-digits.digits-long {
+  font-size: clamp(0.7rem, 10vh, 2.6rem) !important;
+  font-size: 13cqi !important;
+  max-width: 78% !important;
 }
 
 body.preview-mode .ring-subtitle {
-  font-size: clamp(0.6rem, 2vw, 1rem) !important;
-  letter-spacing: 0.2em !important;
-  margin-top: 6px !important;
+  font-size: clamp(0.45rem, 2.4vh, 0.8rem) !important;
+  font-size: 3.4cqi !important;
+  letter-spacing: 0.14em !important;
+  margin-top: 4px !important;
+  max-width: 64% !important;
 }
 
 /* ================= 3. NORMAL CLOCK TIME VIEW ================= */
