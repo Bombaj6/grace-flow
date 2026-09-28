@@ -126,6 +126,7 @@ function switchDeck(deckId) {
 
   if (deckId === 'settings-deck') {
     fetchNetworkInfo();
+    fetchLiveStats();
   }
 }
 
@@ -931,6 +932,20 @@ async function fetchNetworkInfo() {
   }
 }
 
+// Live stats preview for settings deck
+async function fetchLiveStats() {
+  try {
+    const res = await fetch('/api/stats');
+    const data = await res.json();
+    const miniScreens = document.getElementById('miniStatLiveScreens');
+    const miniVisitors = document.getElementById('miniStatUniqueVisitors');
+    const miniCountdowns = document.getElementById('miniStatCountdowns');
+    if (miniScreens) miniScreens.textContent = data.liveConnectedScreens || 1;
+    if (miniVisitors) miniVisitors.textContent = data.uniqueVisitors || 1;
+    if (miniCountdowns) miniCountdowns.textContent = data.totalCountdownsStarted || 0;
+  } catch (e) {}
+}
+
 // Copy button handlers
 document.querySelectorAll('.copy-btn').forEach(btn => {
   btn.addEventListener('click', () => {
@@ -1502,6 +1517,7 @@ setupSSE();
 loadSchedule();
 loadTemplates();
 fetchNetworkInfo();
+fetchLiveStats();
 loadSavedChurchName();
 loadSavedHotkeys();
 

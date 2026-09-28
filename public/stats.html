@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Grace Flow — Live Usage & Church Analytics</title>
+  <link rel="icon" type="image/png" href="/assets/icon.png">
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    .stats-page-body {
+      background: var(--bg-body, #0b0f19);
+      color: var(--text-main, #ffffff);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    .stats-container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 32px 20px;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+    .stats-header-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--border-color, #232d45);
+    }
+    .stats-title-group h1 {
+      font-size: 24px;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .stats-title-group p {
+      font-size: 13px;
+      color: var(--text-muted, #94a3b8);
+      margin-top: 4px;
+    }
+    .stats-nav-actions {
+      display: flex;
+      gap: 10px;
+    }
+    .stats-hero-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 16px;
+    }
+    .stat-hero-card {
+      background: var(--bg-card, #131929);
+      border: 1px solid var(--border-color, #232d45);
+      border-radius: 14px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
+    }
+    .stat-hero-card.live-card {
+      border-color: rgba(16, 185, 129, 0.4);
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.08) 0%, rgba(19, 25, 41, 1) 100%);
+    }
+    .stat-card-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .stat-icon {
+      font-size: 24px;
+    }
+    .live-pulse-dot {
+      font-size: 11px;
+      font-weight: 700;
+      color: #10b981;
+      background: rgba(16, 185, 129, 0.15);
+      padding: 3px 8px;
+      border-radius: 9999px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .live-pulse-dot span {
+      width: 7px;
+      height: 7px;
+      background: #10b981;
+      border-radius: 50%;
+      animation: pulseGreen 1s infinite alternate;
+    }
+    @keyframes pulseGreen {
+      from { opacity: 0.3; transform: scale(0.8); }
+      to { opacity: 1; transform: scale(1.2); }
+    }
+    .stat-hero-number {
+      font-size: 36px;
+      font-weight: 900;
+      color: var(--text-main, #ffffff);
+      font-family: var(--font-mono, monospace);
+      letter-spacing: -0.03em;
+    }
+    .stat-hero-label {
+      font-size: 12px;
+      color: var(--text-muted, #94a3b8);
+      font-weight: 600;
+    }
+    .breakdowns-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+    @media (max-width: 768px) {
+      .breakdowns-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    .breakdown-card {
+      background: var(--bg-card, #131929);
+      border: 1px solid var(--border-color, #232d45);
+      border-radius: 14px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .breakdown-card-title {
+      font-size: 14px;
+      font-weight: 800;
+      color: #a5b4fc;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .breakdown-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .breakdown-row {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .breakdown-meta {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      color: var(--text-main, #ffffff);
+      font-weight: 600;
+    }
+    .breakdown-bar-bg {
+      height: 8px;
+      background: rgba(255, 255, 255, 0.06);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .breakdown-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #8b5cf6, #3b82f6);
+      border-radius: 4px;
+      transition: width 0.4s ease;
+    }
+    .ga-banner-card {
+      background: linear-gradient(135deg, rgba(245, 158, 11, 0.1) 0%, rgba(19, 25, 41, 1) 100%);
+      border: 1px solid rgba(245, 158, 11, 0.35);
+      border-radius: 14px;
+      padding: 20px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    .ga-banner-left {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .ga-logo-icon {
+      font-size: 36px;
+    }
+    .ga-banner-text h3 {
+      font-size: 16px;
+      font-weight: 800;
+      color: #fbbf24;
+      margin: 0;
+    }
+    .ga-banner-text p {
+      font-size: 12px;
+      color: var(--text-muted, #94a3b8);
+      margin-top: 4px;
+    }
+    .ga-input-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .ga-input-row input {
+      background: var(--bg-input, #0b0f19);
+      border: 1px solid var(--border-color, #232d45);
+      border-radius: 8px;
+      padding: 8px 12px;
+      font-size: 13px;
+      color: #ffffff;
+      width: 170px;
+      outline: none;
+    }
+  </style>
+</head>
+<body class="stats-page-body">
+  <div class="stats-container">
+    <!-- Header -->
+    <header class="stats-header-bar">
+      <div class="stats-title-group">
+        <h1><span>🕊️</span> Grace Flow Analytics</h1>
+        <p>Live usage tracking, connected church screens, and service runtime telemetry.</p>
+      </div>
+      <div class="stats-nav-actions">
+        <a href="/" class="purple-gradient-btn small-btn">⏱️ Operator Live Deck</a>
+        <a href="https://analytics.google.com" target="_blank" rel="noopener noreferrer" class="outline-btn small-btn">📊 Google Analytics ➔</a>
+      </div>
+    </header>
+
+    <!-- Google Analytics Integration Card -->
+    <div class="ga-banner-card">
+      <div class="ga-banner-left">
+        <div class="ga-logo-icon">📈</div>
+        <div class="ga-banner-text">
+          <h3>Google Analytics 4 (GA4) Integration</h3>
+          <p>Stream: <strong>GraceFlow</strong> (ID: 15859932037) • Tracks global church visitors, countries, and live sessions.</p>
+        </div>
+      </div>
+      <div class="ga-input-row">
+        <input type="text" id="gaMeasurementIdInput" placeholder="G-XXXXXXXXXX" value="">
+        <button id="btnSaveGaId" class="purple-gradient-btn small-btn">Save ID</button>
+      </div>
+    </div>
+
+    <!-- 4 Hero Stat Cards -->
+    <div class="stats-hero-grid">
+      <!-- Live Screens -->
+      <div class="stat-hero-card live-card">
+        <div class="stat-card-top">
+          <span class="stat-icon">📺</span>
+          <div class="live-pulse-dot"><span></span> LIVE</div>
+        </div>
+        <div id="statLiveScreens" class="stat-hero-number">1</div>
+        <div class="stat-hero-label">Live Connected Screens / iPads</div>
+      </div>
+
+      <!-- Unique Churches -->
+      <div class="stat-hero-card">
+        <div class="stat-card-top">
+          <span class="stat-icon">⛪</span>
+        </div>
+        <div id="statUniqueVisitors" class="stat-hero-number">--</div>
+        <div class="stat-hero-label">Unique Churches & Media Teams</div>
+      </div>
+
+      <!-- Countdowns Launched -->
+      <div class="stat-hero-card">
+        <div class="stat-card-top">
+          <span class="stat-icon">🚀</span>
+        </div>
+        <div id="statCountdownsStarted" class="stat-hero-number">--</div>
+        <div class="stat-hero-label">Total Countdowns Launched</div>
+      </div>
+
+      <!-- Service Hours -->
+      <div class="stat-hero-card">
+        <div class="stat-card-top">
+          <span class="stat-icon">⏳</span>
+        </div>
+        <div id="statServiceHours" class="stat-hero-number">--</div>
+        <div class="stat-hero-label">Total Service Hours Elapsed</div>
+      </div>
+    </div>
+
+    <!-- Device & OS Breakdowns -->
+    <div class="breakdowns-grid">
+      <!-- Devices -->
+      <div class="breakdown-card">
+        <div class="breakdown-card-title">📱 Device Breakdown</div>
+        <div id="devicesBreakdownList" class="breakdown-list">
+          <!-- Populated via JS -->
+        </div>
+      </div>
+
+      <!-- Operating Systems -->
+      <div class="breakdown-card">
+        <div class="breakdown-card-title">💻 Operating Systems</div>
+        <div id="osBreakdownList" class="breakdown-list">
+          <!-- Populated via JS -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // GA4 ID Management
+    const gaInput = document.getElementById('gaMeasurementIdInput');
+    const btnSaveGa = document.getElementById('btnSaveGaId');
+    const savedGaId = localStorage.getItem('grace_flow_ga_id') || '';
+    if (gaInput && savedGaId) gaInput.value = savedGaId;
+
+    if (btnSaveGa) {
+      btnSaveGa.addEventListener('click', () => {
+        const val = gaInput.value.trim().toUpperCase();
+        if (val) {
+          localStorage.setItem('grace_flow_ga_id', val);
+          alert('✓ Google Analytics Measurement ID saved! Grace Flow will now send live events to GA4.');
+          window.location.reload();
+        }
+      });
+    }
+
+    // Fetch and render stats
+    async function loadStats() {
+      try {
+        const res = await fetch('/api/stats');
+        const data = await res.json();
+
+        // 1. Hero numbers
+        document.getElementById('statLiveScreens').textContent = data.liveConnectedScreens || 1;
+        document.getElementById('statUniqueVisitors').textContent = data.uniqueVisitors || 1;
+        document.getElementById('statCountdownsStarted').textContent = data.totalCountdownsStarted || 0;
+        const hours = ((data.totalMinutesElapsed || 0) / 60).toFixed(1);
+        document.getElementById('statServiceHours').textContent = `${hours} hrs`;
+
+        // 2. Devices breakdown
+        const devContainer = document.getElementById('devicesBreakdownList');
+        const devices = data.devices || {};
+        const totalDev = Object.values(devices).reduce((a, b) => a + b, 0) || 1;
+        devContainer.innerHTML = Object.entries(devices).map(([dev, count]) => {
+          const pct = Math.round((count / totalDev) * 100);
+          return `
+            <div class="breakdown-row">
+              <div class="breakdown-meta">
+                <span>${dev}</span>
+                <span>${count} (${pct}%)</span>
+              </div>
+              <div class="breakdown-bar-bg">
+                <div class="breakdown-bar-fill" style="width: ${pct}%"></div>
+              </div>
+            </div>
+          `;
+        }).join('') || '<span style="color: #64748b; font-size: 12px;">No device data yet.</span>';
+
+        // 3. OS breakdown
+        const osContainer = document.getElementById('osBreakdownList');
+        const osData = data.operatingSystems || {};
+        const totalOs = Object.values(osData).reduce((a, b) => a + b, 0) || 1;
+        osContainer.innerHTML = Object.entries(osData).map(([osName, count]) => {
+          const pct = Math.round((count / totalOs) * 100);
+          return `
+            <div class="breakdown-row">
+              <div class="breakdown-meta">
+                <span>${osName}</span>
+                <span>${count} (${pct}%)</span>
+              </div>
+              <div class="breakdown-bar-bg">
+                <div class="breakdown-bar-fill" style="width: ${pct}%; background: linear-gradient(90deg, #ec4899, #8b5cf6);"></div>
+              </div>
+            </div>
+          `;
+        }).join('') || '<span style="color: #64748b; font-size: 12px;">No OS data yet.</span>';
+
+      } catch (err) {
+        console.warn('Error loading stats:', err);
+      }
+    }
+
+    loadStats();
+    // Auto-refresh stats every 5 seconds
+    setInterval(loadStats, 5000);
+  </script>
+</body>
+</html>

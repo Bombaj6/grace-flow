@@ -558,7 +558,42 @@
         </div>
       </div>
 
-      <!-- Section 6: About & Creator Credits -->
+      <!-- Section 6: Live Usage & Analytics -->
+      <div class="card settings-card">
+        <div class="settings-card-header">
+          <div class="setting-icon">📊</div>
+          <div class="setting-header-content">
+            <div class="setting-title-with-toggle">
+              <div>
+                <h3>Live Usage & Church Analytics</h3>
+                <p class="setting-desc">Real-time visitor telemetry, active connected stage displays, and Google Analytics 4 tracking.</p>
+              </div>
+              <a href="/stats" target="_blank" class="purple-gradient-btn small-btn">View Full Analytics Dashboard ➔</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="settings-analytics-preview">
+          <div class="analytics-mini-stat">
+            <span class="mini-label">Active Connected Screens:</span>
+            <strong id="miniStatLiveScreens" class="mini-value text-green">1</strong>
+          </div>
+          <div class="analytics-mini-stat">
+            <span class="mini-label">Unique Churches & Visitors:</span>
+            <strong id="miniStatUniqueVisitors" class="mini-value">--</strong>
+          </div>
+          <div class="analytics-mini-stat">
+            <span class="mini-label">Total Countdowns Launched:</span>
+            <strong id="miniStatCountdowns" class="mini-value">--</strong>
+          </div>
+          <div class="analytics-mini-stat">
+            <span class="mini-label">GA4 Stream ID:</span>
+            <strong class="mini-value text-amber">15859932037</strong>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 7: About & Creator Credits -->
       <div class="card settings-card">
         <div class="settings-card-header">
           <div class="setting-icon">✨</div>
@@ -685,6 +720,7 @@
     </div>
   </div>
 
+  <script src="/js/telemetry.js"></script>
   <script src="/js/app.js"></script>
 </body>
 </html>

@@ -2,6 +2,7 @@ import http from 'node:http';
 import fs from 'node:fs';
 import path from 'node:path';
 import os from 'node:os';
+import crypto from 'node:crypto';
 import { fileURLToPath } from 'node:url';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -11,11 +12,54 @@ const PORT = process.env.PORT || 3000;
 const DATA_DIR = path.join(__dirname, 'data');
 const TEMPLATES_FILE = path.join(DATA_DIR, 'templates.json');
 const SCHEDULE_FILE = path.join(DATA_DIR, 'schedule.json');
+const STATS_FILE = path.join(DATA_DIR, 'stats.json');
 
 // Ensure data folder exists
 if (!fs.existsSync(DATA_DIR)) {
   fs.mkdirSync(DATA_DIR, { recursive: true });
 }
+
+// Analytics and Telemetry Store
+let serverStats = {
+  totalPageViews: 0,
+  totalOperatorViews: 0,
+  totalStageViews: 0,
+  totalCountdownsStarted: 0,
+  totalSecondsElapsed: 0,
+  uniqueVisitors: 0,
+  visitorHashes: {},
+  devices: { Desktop: 0, Tablet: 0, Mobile: 0 },
+  operatingSystems: { Mac: 0, Windows: 0, iOS: 0, Android: 0, Linux: 0, Other: 0 },
+  firstSeen: new Date().toISOString(),
+  lastSeen: new Date().toISOString()
+};
+
+if (fs.existsSync(STATS_FILE)) {
+  try {
+    const loaded = JSON.parse(fs.readFileSync(STATS_FILE, 'utf8'));
+    serverStats = { ...serverStats, ...loaded };
+  } catch (e) {
+    console.warn('Could not read existing stats.json, initializing fresh stats');
+  }
+}
+
+function hashIp(ip) {
+  if (!ip) return 'anon_' + Math.random().toString(36).substring(2, 10);
+  return crypto.createHash('sha256').update(ip + '-grace-flow-salt').digest('hex').substring(0, 16);
+}
+
+function saveStatsDebounced() {
+  try {
+    serverStats.lastSeen = new Date().toISOString();
+    serverStats.uniqueVisitors = Object.keys(serverStats.visitorHashes || {}).length;
+    fs.writeFileSync(STATS_FILE, JSON.stringify(serverStats, null, 2), 'utf8');
+  } catch (err) {
+    console.error('Error saving stats.json:', err.message);
+  }
+}
+
+// Save stats every 30 seconds
+setInterval(saveStatsDebounced, 30000);
 
 // Master Timer & Display State
 let timerState = {
@@ -64,6 +108,7 @@ setInterval(() => {
   if (timerState.status === 'running') {
     if (timerState.remainingSeconds > 0) {
       timerState.remainingSeconds -= 1;
+      serverStats.totalSecondsElapsed += 1;
       if (timerState.remainingSeconds === 0) {
         timerState.status = 'ended'; // Time is up! No overtime count-up.
         broadcastEvent('TIMES_UP', { title: timerState.title });
@@ -194,6 +239,9 @@ const server = http.createServer((req, res) => {
     req.on('end', () => {
       try {
         const update = JSON.parse(body);
+        if (update.status === 'running' && timerState.status !== 'running') {
+          serverStats.totalCountdownsStarted += 1;
+        }
         timerState = { ...timerState, ...update };
         broadcastState();
         res.writeHead(200, { 'Content-Type': 'application/json' });
@@ -203,6 +251,75 @@ const server = http.createServer((req, res) => {
         res.end(JSON.stringify({ error: err.message }));
       }
     });
+    return;
+  }
+
+  // Telemetry Ping from client (Operator or Stage)
+  if (pathname === '/api/telemetry' && req.method === 'POST') {
+    let body = '';
+    req.on('data', chunk => { body += chunk; });
+    req.on('end', () => {
+      try {
+        const data = JSON.parse(body || '{}');
+        const clientIp = (req.headers['x-forwarded-for'] || req.socket.remoteAddress || '').split(',')[0].trim();
+        const ipHash = hashIp(clientIp);
+
+        serverStats.totalPageViews += 1;
+        if (data.page === 'stage') {
+          serverStats.totalStageViews += 1;
+        } else {
+          serverStats.totalOperatorViews += 1;
+        }
+
+        // Track unique visitor hash
+        if (!serverStats.visitorHashes[ipHash]) {
+          serverStats.visitorHashes[ipHash] = {
+            firstSeen: new Date().toISOString(),
+            visits: 1,
+            lastSeen: new Date().toISOString()
+          };
+        } else {
+          serverStats.visitorHashes[ipHash].visits += 1;
+          serverStats.visitorHashes[ipHash].lastSeen = new Date().toISOString();
+        }
+        serverStats.uniqueVisitors = Object.keys(serverStats.visitorHashes).length;
+
+        // Device breakdown
+        const dev = data.device || 'Desktop';
+        serverStats.devices[dev] = (serverStats.devices[dev] || 0) + 1;
+
+        // OS breakdown
+        const osName = data.os || 'Other';
+        serverStats.operatingSystems[osName] = (serverStats.operatingSystems[osName] || 0) + 1;
+
+        res.writeHead(200, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ success: true }));
+      } catch (err) {
+        res.writeHead(400, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ error: err.message }));
+      }
+    });
+    return;
+  }
+
+  // Get Live Stats
+  if (pathname === '/api/stats' && req.method === 'GET') {
+    res.writeHead(200, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({
+      liveConnectedScreens: sseClients.size,
+      timerStatus: timerState.status,
+      activeTitle: timerState.title,
+      totalPageViews: serverStats.totalPageViews,
+      totalOperatorViews: serverStats.totalOperatorViews,
+      totalStageViews: serverStats.totalStageViews,
+      totalCountdownsStarted: serverStats.totalCountdownsStarted,
+      totalMinutesElapsed: Math.round(serverStats.totalSecondsElapsed / 60),
+      uniqueVisitors: Object.keys(serverStats.visitorHashes || {}).length,
+      devices: serverStats.devices,
+      operatingSystems: serverStats.operatingSystems,
+      firstSeen: serverStats.firstSeen,
+      lastSeen: serverStats.lastSeen
+    }));
     return;
   }
 
@@ -284,12 +401,14 @@ const server = http.createServer((req, res) => {
     }
   }
 
-  // Stage route alias
+  // Route aliases
   let filePath;
   if (pathname === '/' || pathname === '/index.html') {
     filePath = path.join(__dirname, 'public', 'index.html');
   } else if (pathname === '/stage' || pathname === '/stage.html') {
     filePath = path.join(__dirname, 'public', 'stage.html');
+  } else if (pathname === '/stats' || pathname === '/stats.html') {
+    filePath = path.join(__dirname, 'public', 'stats.html');
   } else {
     filePath = path.join(__dirname, 'public', pathname);
   }
