@@ -1,0 +1,16 @@
+{
+  "version": "1.0.0",
+  "releaseDate": "2026-10-17",
+  "title": "Grace Flow v1.0.0 — Official Launch",
+  "releaseNotes": [
+    "100% Offline Church Countdown & Stage Production System",
+    "Digital, Analog Circular Ring, and Wall Clock presentation modes",
+    "Full Stage Confidence Monitor with instant stage messages and chime audio",
+    "Customizable hotkeys and quick blackout mode",
+    "Dedicated standalone desktop apps for macOS (.dmg) and Windows (.exe)"
+  ],
+  "downloadUrl": "https://github.com/Bombaj6/grace-flow/releases/latest",
+  "macDmgUrl": "https://github.com/Bombaj6/grace-flow/releases/latest",
+  "windowsExeUrl": "https://github.com/Bombaj6/grace-flow/releases/latest",
+  "announcement": ""
+}

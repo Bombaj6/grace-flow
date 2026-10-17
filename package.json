@@ -3,10 +3,14 @@
   "version": "1.0.0",
   "description": "Grace Flow - Church Countdown, Clock & Run of Show Management System",
   "type": "module",
-  "main": "server.js",
+  "main": "electron-main.cjs",
   "scripts": {
     "start": "node server.js",
-    "build:app": "bash scripts/build-app.sh"
+    "desktop": "electron electron-main.cjs",
+    "build:mac": "electron-builder --mac",
+    "build:win": "electron-builder --win",
+    "build:all": "electron-builder -mw",
+    "build:legacy": "bash scripts/build-app.sh"
   },
   "engines": {
     "node": ">=18.0.0"
@@ -21,5 +25,47 @@
   ],
   "author": "Peter Olatunji (@_mayowapeter)",
   "homepage": "https://instagram.com/_mayowapeter",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "electron": "^44.7.2",
+    "electron-builder": "^26.15.3"
+  },
+  "build": {
+    "appId": "com.graceflow.app",
+    "productName": "Grace Flow",
+    "copyright": "Copyright © 2026 Peter Olatunji (@_mayowapeter)",
+    "directories": {
+      "output": "dist-electron"
+    },
+    "files": [
+      "electron-main.cjs",
+      "server.js",
+      "public/**/*",
+      "data/**/*",
+      "package.json"
+    ],
+    "asar": true,
+    "mac": {
+      "category": "public.app-category.productivity",
+      "icon": "public/assets/AppIcon.icns",
+      "target": [
+        "dmg",
+        "zip"
+      ]
+    },
+    "win": {
+      "icon": "public/assets/icon.png",
+      "target": [
+        "nsis",
+        "portable"
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "Grace Flow"
+    }
+  }
 }

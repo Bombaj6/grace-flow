@@ -9,10 +9,12 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const PORT = process.env.PORT || 3000;
-const DATA_DIR = path.join(__dirname, 'data');
+const DATA_DIR = process.env.DATA_DIR || path.join(__dirname, 'data');
 const TEMPLATES_FILE = path.join(DATA_DIR, 'templates.json');
 const SCHEDULE_FILE = path.join(DATA_DIR, 'schedule.json');
 const STATS_FILE = path.join(DATA_DIR, 'stats.json');
+const VERSION_FILE = path.join(__dirname, 'version.json');
+const ADMIN_PASSCODE = process.env.ADMIN_PASSCODE || 'peter2026';
 
 // Ensure data folder exists
 if (!fs.existsSync(DATA_DIR)) {
@@ -213,15 +215,19 @@ const server = http.createServer((req, res) => {
 
   // Version and system attribution endpoint
   if (pathname === '/api/version' && req.method === 'GET') {
+    const versionData = readJson(VERSION_FILE, {});
     res.writeHead(200, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify({
       name: 'Grace Flow',
-      version: '1.0.0',
+      version: versionData.version || '1.0.0',
       author: 'Peter Olatunji',
       instagram: '@_mayowapeter',
       instagramUrl: 'https://instagram.com/_mayowapeter',
-      releaseDate: '2026-09-27',
-      latestVersion: '1.0.0'
+      releaseDate: versionData.releaseDate || '2026-10-17',
+      latestVersion: versionData.version || '1.0.0',
+      title: versionData.title || 'Grace Flow v1.0.0',
+      releaseNotes: versionData.releaseNotes || [],
+      downloadUrl: versionData.downloadUrl || 'https://github.com/Bombaj6/grace-flow/releases/latest'
     }));
     return;
   }
@@ -303,8 +309,37 @@ const server = http.createServer((req, res) => {
     return;
   }
 
-  // Get Live Stats
+  // Verify Admin Passcode for Stats Dashboard
+  if (pathname === '/api/stats/verify' && req.method === 'POST') {
+    let body = '';
+    req.on('data', chunk => { body += chunk; });
+    req.on('end', () => {
+      try {
+        const { key } = JSON.parse(body || '{}');
+        if (key && key === ADMIN_PASSCODE) {
+          res.writeHead(200, { 'Content-Type': 'application/json' });
+          res.end(JSON.stringify({ success: true }));
+        } else {
+          res.writeHead(401, { 'Content-Type': 'application/json' });
+          res.end(JSON.stringify({ error: 'Incorrect admin passcode' }));
+        }
+      } catch (e) {
+        res.writeHead(400, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ error: 'Invalid request' }));
+      }
+    });
+    return;
+  }
+
+  // Get Live Stats (Protected: Only Peter Olatunji and authorized team)
   if (pathname === '/api/stats' && req.method === 'GET') {
+    const authHeader = req.headers['x-admin-key'] || parsedUrl.searchParams.get('key');
+    if (authHeader !== ADMIN_PASSCODE) {
+      res.writeHead(401, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ error: 'Unauthorized. Admin passcode required.' }));
+      return;
+    }
+
     res.writeHead(200, { 'Content-Type': 'application/json' });
     res.end(JSON.stringify({
       liveConnectedScreens: sseClients.size,

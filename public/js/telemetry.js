@@ -26,17 +26,30 @@
     const isStage = window.location.pathname.includes('/stage');
     const { os, device } = getDeviceInfo();
 
+    const telemetryPayload = JSON.stringify({
+      page: isStage ? 'stage' : 'operator',
+      os,
+      device,
+      referrer: document.referrer || '',
+      screenRes: `${window.screen.width}x${window.screen.height}`
+    });
+
+    // 1. Local telemetry ping
     fetch('/api/telemetry', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        page: isStage ? 'stage' : 'operator',
-        os,
-        device,
-        referrer: document.referrer || '',
-        screenRes: `${window.screen.width}x${window.screen.height}`
-      })
+      body: telemetryPayload
     }).catch(() => {});
+
+    // 2. Global Cloud Telemetry Ping (Only reaches Peter's master dashboard on Render)
+    if (navigator.onLine && !window.location.hostname.includes('onrender.com')) {
+      fetch('https://grace-flow.onrender.com/api/telemetry', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: telemetryPayload,
+        mode: 'cors'
+      }).catch(() => {});
+    }
   } catch (e) {}
 
   // 3. Google Analytics 4 (GA4) Integration

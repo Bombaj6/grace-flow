@@ -126,7 +126,6 @@ function switchDeck(deckId) {
 
   if (deckId === 'settings-deck') {
     fetchNetworkInfo();
-    fetchLiveStats();
   }
 }
 
@@ -932,20 +931,6 @@ async function fetchNetworkInfo() {
   }
 }
 
-// Live stats preview for settings deck
-async function fetchLiveStats() {
-  try {
-    const res = await fetch('/api/stats');
-    const data = await res.json();
-    const miniScreens = document.getElementById('miniStatLiveScreens');
-    const miniVisitors = document.getElementById('miniStatUniqueVisitors');
-    const miniCountdowns = document.getElementById('miniStatCountdowns');
-    if (miniScreens) miniScreens.textContent = data.liveConnectedScreens || 1;
-    if (miniVisitors) miniVisitors.textContent = data.uniqueVisitors || 1;
-    if (miniCountdowns) miniCountdowns.textContent = data.totalCountdownsStarted || 0;
-  } catch (e) {}
-}
-
 // Copy button handlers
 document.querySelectorAll('.copy-btn').forEach(btn => {
   btn.addEventListener('click', () => {
@@ -1426,14 +1411,21 @@ async function checkForUpdates(isUserClick = false) {
       "Multi-monitor second screen stability enhancements."
     ];
 
-    // 2. If online, check remote repository package.json for newest release
+    // 2. If online, check remote repository version.json for newest release
     if (navigator.onLine) {
       try {
-        const remoteRes = await fetch('https://raw.githubusercontent.com/Bombaj6/grace-flow/main/package.json', { cache: 'no-store' });
+        const cacheBuster = Date.now();
+        const remoteRes = await fetch(`https://raw.githubusercontent.com/Bombaj6/grace-flow/main/version.json?t=${cacheBuster}`, { cache: 'no-store' });
         if (remoteRes.ok) {
-          const remotePkg = await remoteRes.json();
-          if (remotePkg && remotePkg.version) {
-            latestVersion = remotePkg.version;
+          const remoteData = await remoteRes.json();
+          if (remoteData && remoteData.version) {
+            latestVersion = remoteData.version;
+          }
+          if (remoteData && Array.isArray(remoteData.releaseNotes) && remoteData.releaseNotes.length > 0) {
+            releaseNotes = remoteData.releaseNotes;
+          }
+          if (remoteData && remoteData.downloadUrl && btnDownloadUpdate) {
+            btnDownloadUpdate.href = remoteData.downloadUrl;
           }
         }
       } catch (remoteErr) {
@@ -1517,7 +1509,6 @@ setupSSE();
 loadSchedule();
 loadTemplates();
 fetchNetworkInfo();
-fetchLiveStats();
 loadSavedChurchName();
 loadSavedHotkeys();
 
