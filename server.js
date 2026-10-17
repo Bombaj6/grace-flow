@@ -166,7 +166,9 @@ const MIME_TYPES = {
   '.svg': 'image/svg+xml',
   '.ico': 'image/x-icon',
   '.woff2': 'font/woff2',
-  '.webmanifest': 'application/manifest+json'
+  '.webmanifest': 'application/manifest+json',
+  '.xml': 'application/xml; charset=utf-8',
+  '.txt': 'text/plain; charset=utf-8'
 };
 
 const server = http.createServer((req, res) => {

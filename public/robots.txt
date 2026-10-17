@@ -1,0 +1,44 @@
+# Grace Flow — Robots Exclusion Protocol
+# Optimized for Google, Bing, and AI Search Engines (ChatGPT, Perplexity, Gemini, Claude)
+
+User-agent: *
+Allow: /
+Allow: /app
+Allow: /stage
+Disallow: /stats
+Disallow: /api/
+
+# OpenAI ChatGPT Search Crawler
+User-agent: GPTBot
+Allow: /
+Allow: /app
+Allow: /stage
+Disallow: /stats
+Disallow: /api/
+
+# Google Gemini & Search Extended Crawler
+User-agent: Google-Extended
+Allow: /
+Allow: /app
+Allow: /stage
+Disallow: /stats
+Disallow: /api/
+
+# Perplexity AI Crawler
+User-agent: PerplexityBot
+Allow: /
+Allow: /app
+Allow: /stage
+Disallow: /stats
+Disallow: /api/
+
+# Anthropic Claude Crawler
+User-agent: ClaudeBot
+Allow: /
+Allow: /app
+Allow: /stage
+Disallow: /stats
+Disallow: /api/
+
+# XML Sitemap
+Sitemap: https://grace-flow.onrender.com/sitemap.xml
