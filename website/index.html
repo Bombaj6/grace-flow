@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GraceFlow Church Countdown — Free Service Countdown, NDI® & Announcement Screen</title>
+    <meta name="description" content="A beautiful, free countdown and announcement screen for churches. Wall-clock service countdowns, NDI® Wi-Fi live broadcast, OBS Studio integration, transparent background keying, run-of-show scheduling, slides, themes, and more. 100% offline.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23818cf8'/%3E%3Cpath d='M16 8v8l6 4' stroke='%23050514' stroke-width='3' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+
+    <!-- ============ GOOGLE ANALYTICS / WEB ANALYTICS ============ -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-ET6FP1RS4M"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-ET6FP1RS4M');
+    </script>
+</head>
+<body>
+
+    <!-- ============ NAV ============ -->
+    <header class="site-nav">
+        <div class="nav-inner">
+            <a class="brand" href="#top">
+                <span class="brand-mark" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" width="22" height="22"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm1 11h-3V7h2v4h1V7h2v8h-2v-2zm0 4h-2v-2h2v2z" fill="currentColor"/></svg>
+                </span>
+                <span class="brand-text">GraceFlow <em>Countdown</em></span>
+            </a>
+            <nav class="nav-links" aria-label="Primary">
+                <a href="#features">Features</a>
+                <a href="#ndi-broadcast">NDI® &amp; OBS</a>
+                <a href="#themes">Themes</a>
+                <a href="#faq">FAQ</a>
+                <button id="theme-toggle" class="theme-toggle" aria-label="Switch to light mode">☀️</button>
+                <a href="#download" class="nav-cta">Download</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- ============ HERO ============ -->
+    <section id="top" class="hero">
+        <div class="hero-bg" aria-hidden="true"></div>
+        <div class="hero-inner">
+            <div class="hero-copy">
+                <span class="eyebrow">Free · 100% offline · Native NDI® &amp; OBS Support</span>
+                <h1>The congregation screen your service deserves.</h1>
+                <p class="hero-sub">
+                    A beautiful countdown and announcement display for churches. Count down to
+                    <strong>7:30 AM exactly</strong>, stream wire-free via <strong>Native NDI® &amp; OBS</strong>, run service schedules, announcement slides, and one-click projector outputs.
+                </p>
+                <div class="hero-cta">
+                    <a href="#download" class="btn btn-primary">Download for free</a>
+                    <a href="#features" class="btn btn-ghost">See what's inside</a>
+                </div>
+                <ul class="hero-bullets">
+                    <li>🕒 Wall-clock service countdown</li>
+                    <li>📡 Native NDI® &amp; OBS Wi-Fi Broadcast</li>
+                    <li>📺 Auto-send to projector (Screen 2)</li>
+                    <li>🔒 Works fully offline</li>
+                </ul>
+            </div>
+
+            <!-- CSS mockup of the congregation display -->
+            <div class="hero-display" aria-hidden="true">
+                <div class="window-chrome">
+                    <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+                    <span class="window-title">GraceFlow Display Screen</span>
+                </div>
+                <div class="mock-display theme-deep-grace">
+                    <div class="mock-left">
+                        <div class="mock-ring">
+                            <svg viewBox="0 0 200 200" width="200" height="200">
+                                <circle class="ring-bg" cx="100" cy="100" r="92" fill="none" stroke-width="6"/>
+                                <circle class="ring-bar" cx="100" cy="100" r="92" fill="none" stroke-width="8" stroke-linecap="round"
+                                        stroke-dasharray="578" stroke-dashoffset="150"/>
+                            </svg>
+                            <div class="mock-digits">09:42</div>
+                        </div>
+                        <div class="mock-label">Service Starts In</div>
+                    </div>
+                    <div class="mock-right">
+                        <div class="mock-tag">ANNOUNCEMENT</div>
+                        <div class="mock-slide-title">Welcome to Church!</div>
+                        <div class="mock-slide-body">We're so glad you joined us today. Please make yourself at home.</div>
+                    </div>
+                    <div class="mock-ticker">
+                        <div class="mock-ticker-track">
+                            <span>Welcome to Church! The service will begin shortly. · Online giving at graceflow.org/give · </span>
+                            <span>Welcome to Church! The service will begin shortly. · Online giving at graceflow.org/give · </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============ FEATURES ============ -->
+    <section id="features" class="section">
+        <div class="section-inner">
+            <h2 class="section-title">Everything your tech team needs, nothing it doesn't</h2>
+            <p class="section-sub">Two windows — one operator dashboard and one congregation display — controlled live from a laptop at the sound desk.</p>
+
+            <div class="features-grid">
+                <article class="feature-card highlight-card">
+                    <div class="feature-icon">📡</div>
+                    <h3>Native NDI® &amp; OBS Support</h3>
+                    <p>Auto-discovered on Wi-Fi/LAN by OBS Studio, vMix, and ProPresenter. Stream countdowns wire-free with 100% transparent background keying for live camera lower-thirds!</p>
+                </article>
+                <article class="feature-card">
+                    <div class="feature-icon">🕒</div>
+                    <h3>Countdown to a clock time</h3>
+                    <p>Set the service start time — <strong>7:30 AM</strong> — and the display counts down to the exact minute. No mental math at 7:29.</p>
+                </article>
+                <article class="feature-card">
+                    <div class="feature-icon">⏱️</div>
+                    <h3>Duration timers</h3>
+                    <p>Precision wall-clock timing with zero drift, plus +/− quick adjustments while a timer is running.</p>
+                </article>
+                <article class="feature-card">
+                    <div class="feature-icon">📋</div>
+                    <h3>Run-of-show scheduling</h3>
+                    <p>Build the order of service, drag to reorder, and cue each item with one click when it's time. Save favorite services as templates.</p>
+                </article>
+                <article class="feature-card">
+                    <div class="feature-icon">📣</div>
+                    <h3>Announcement slides &amp; ticker</h3>
+                    <p>Rotating announcement deck, a scrolling bottom ticker, and a high-priority alert overlay for urgent messages.</p>
+                </article>
+                <article class="feature-card">
+                    <div class="feature-icon">📺</div>
+                    <h3>One-click projector output</h3>
+                    <p>Send the congregation screen to your second display (HDMI/Projector) and go fullscreen with a single button.</p>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============ NDI & BROADCAST SHOWCASE SECTION ============ -->
+    <section id="ndi-broadcast" class="section section-alt">
+        <div class="section-inner">
+            <div style="text-align: center; max-width: 720px; margin: 0 auto 40px auto;">
+                <span class="eyebrow" style="background: rgba(168, 85, 247, 0.15); color: #c084fc; border: 1px solid rgba(168, 85, 247, 0.3); padding: 4px 14px; border-radius: 20px; font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;">WIRELESS LIVE STREAMING</span>
+                <h2 class="section-title" style="margin-top: 14px;">Built for Live Broadcasts: OBS, vMix &amp; NDI®</h2>
+                <p class="section-sub">Easily broadcast your countdown and announcements to your live stream setup over Wi-Fi without running extra cables.</p>
+            </div>
+            
+            <div class="features-grid">
+                <article class="feature-card">
+                    <div class="feature-icon">📡</div>
+                    <h3>Native NDI® Auto-Discovery</h3>
+                    <p>GraceFlow broadcasts mDNS announcements on your local network. Open OBS Studio or vMix on any computer on the same Wi-Fi, and GraceFlow appears automatically as an NDI video source!</p>
+                </article>
+                
+                <article class="feature-card">
+                    <div class="feature-icon">🌐</div>
+                    <h3>OBS Browser Source URL</h3>
+                    <p>No NDI plugin? No problem! Paste your GraceFlow local LAN HTTP URL (<code>http://&lt;your-ip&gt;:8080/display.html</code>) directly into OBS Browser Source for zero-lag streaming.</p>
+                </article>
+                
+                <article class="feature-card">
+                    <div class="feature-icon">🎨</div>
+                    <h3>Transparent Background (Alpha Channel)</h3>
+                    <p>Toggle 100% Alpha Channel keying in ⚙️ Settings to float countdown timers and lower-third announcements seamlessly over your live camera feeds in OBS and vMix!</p>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============ OPERATOR MOCKUP ============ -->
+    <section class="section">
+        <div class="section-inner operator-split">
+            <div class="operator-copy">
+                <h2 class="section-title">Built for a volunteer at the sound desk</h2>
+                <p class="section-sub">Everything is one glance away — the live countdown, the service schedule, and every announcement.</p>
+                <ul class="check-list">
+                    <li>Live mirror of the congregation screen so you always know what's showing</li>
+                    <li>Quick-cue pills for every run-of-show item</li>
+                    <li>Presets for the timings you use every week</li>
+                    <li>State is saved between sessions — your schedule survives a restart</li>
+                    <li>Works on the same laptop driving the projector</li>
+                </ul>
+            </div>
+
+            <!-- CSS mockup of the operator dashboard -->
+            <div class="operator-mockup" aria-hidden="true">
+                <div class="window-chrome">
+                    <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+                    <span class="window-title">GraceFlow Control Panel</span>
+                </div>
+                <div class="mock-operator">
+                    <div class="mock-op-header">
+                        <span class="mock-op-logo"><i></i> GraceFlow Control</span>
+                        <div class="mock-tabs">
+                            <span class="tab active">Service Desk</span>
+                            <span class="tab">Schedule</span>
+                            <span class="tab">Slides</span>
+                        </div>
+                        <span class="mock-badge">Operator Panel</span>
+                    </div>
+                    <div class="mock-op-body">
+                        <div class="mock-op-panel">
+                            <h4>Timer Controller</h4>
+                            <div class="mock-mirror">
+                                <div class="mock-mirror-top">
+                                    <span>Live Congregation View</span><span class="badge-running">Running</span>
+                                </div>
+                                <div class="mock-mirror-time">09:42</div>
+                            </div>
+                            <div class="mock-section">
+                                <span class="mock-sec-label">Countdown Type</span>
+                                <div class="mock-type-row">
+                                    <span class="type-pill active">🕒 Target Clock Time</span>
+                                    <span class="type-pill">⏱️ Duration</span>
+                                </div>
+                            </div>
+                            <div class="mock-section">
+                                <span class="mock-sec-label">Target Service Start Time</span>
+                                <div class="mock-time-row">
+                                    <span class="mock-time-field"><b>7</b><small>Hour</small></span>
+                                    <span class="mock-time-field"><b>30</b><small>Minute</small></span>
+                                    <span class="mock-time-field ampm"><b>AM</b><small>Period</small></span>
+                                </div>
+                            </div>
+                            <div class="mock-btn-row">
+                                <span class="mock-btn start">▶ Start</span>
+                                <span class="mock-btn warn">⏸ Pause</span>
+                                <span class="mock-btn danger">■ Stop</span>
+                            </div>
+                            <div class="mock-quick-row">
+                                <span class="mock-pill">+1 Min</span>
+                                <span class="mock-pill">+5 Min</span>
+                                <span class="mock-pill">−1 Min</span>
+                                <span class="mock-pill">−5 Min</span>
+                            </div>
+                        </div>
+                        <div class="mock-op-panel">
+                            <h4>Quick Run-of-Show</h4>
+                            <div class="mock-prog-list">
+                                <span class="mock-prog"><i class="ph" style="background:#a78bfa"></i> Pre-Service Prayer <em>30m</em></span>
+                                <span class="mock-prog"><i class="ph" style="background:#818cf8"></i> Worship Service <em>20m</em></span>
+                                <span class="mock-prog"><i class="ph" style="background:#c084fc"></i> Sermon <em>40m</em></span>
+                                <span class="mock-prog"><i class="ph" style="background:#f0abfc"></i> Announcements <em>20m</em></span>
+                            </div>
+                            <div class="mock-alert-box">
+                                <h4>High-Priority Alert</h4>
+                                <p>Type a very important message here…</p>
+                                <span class="mock-btn alert">⚠ Trigger Alert Overlay</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============ THEMES ============ -->
+    <section id="themes" class="section">
+        <div class="section-inner">
+            <h2 class="section-title">Seven looks, one click</h2>
+            <p class="section-sub">Each theme comes with its own animated particle background and accent palette — match the season or the mood of the service.</p>
+            <div class="themes-grid">
+                <div class="theme-card"><div class="theme-swatch sw-deep-grace"></div><span>Deep Grace</span></div>
+                <div class="theme-card"><div class="theme-swatch sw-neon-fire"></div><span>Neon Fire</span></div>
+                <div class="theme-card"><div class="theme-swatch sw-golden-hour"></div><span>Golden Hour</span></div>
+                <div class="theme-card"><div class="theme-swatch sw-purple-majesty"></div><span>Purple Majesty</span></div>
+                <div class="theme-card"><div class="theme-swatch sw-advent-hope"></div><span>Advent Hope</span></div>
+                <div class="theme-card"><div class="theme-swatch sw-easter-sunrise"></div><span>Easter Sunrise</span></div>
+                <div class="theme-card"><div class="theme-swatch sw-modern-minimal"></div><span>Modern Minimal</span></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============ DOWNLOAD ============ -->
+    <section id="download" class="section section-download">
+        <div class="section-inner">
+            <h2 class="section-title">Download GraceFlow Countdown</h2>
+            <p class="section-sub">Free forever. No account, no internet required, no data leaves the church.</p>
+
+            <div class="download-grid">
+                <a class="download-card" id="dl-macos" href="downloads/GraceFlow-Church-Countdown-Mac.dmg" download>
+                    <div class="dl-icon">🍎</div>
+                    <h3>macOS</h3>
+                    <p class="dl-meta">Apple Silicon &amp; Intel · ~15 MB</p>
+                    <span class="dl-btn">Download .dmg</span>
+                </a>
+                <a class="download-card" id="dl-windows" href="downloads/GraceFlow-Church-Countdown-Windows.exe" download>
+                    <div class="dl-icon">🪟</div>
+                    <h3>Windows</h3>
+                    <p class="dl-meta">Windows 10 &amp; 11 · Single .exe</p>
+                    <span class="dl-btn">Download .exe</span>
+                </a>
+            </div>
+
+            <div class="download-notes">
+                <p><strong>Getting it on your projector:</strong> open the app, click <em>“Auto-Send Display to Projector”</em>, and the congregation screen moves to your second display and goes fullscreen.</p>
+                <p><strong>Live Stream &amp; NDI Support:</strong> Select NDI or Browser Source mode in ⚙️ Settings for wire-free streaming into OBS Studio and vMix on your Wi-Fi network.</p>
+                <p><strong>Safe &amp; private:</strong> everything runs locally. Your slides, schedules, and messages never touch the internet.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============ FAQ ============ -->
+    <section id="faq" class="section">
+        <div class="section-inner faq-inner">
+            <h2 class="section-title">Frequently asked questions</h2>
+
+            <details class="faq-item">
+                <summary>Does it need internet?</summary>
+                <p>No. The app runs 100% offline once installed — fonts, themes, and everything else are bundled. This is deliberate: church tech should never depend on a flaky connection during service.</p>
+            </details>
+            <details class="faq-item">
+                <summary>How does NDI® and OBS streaming work?</summary>
+                <p>GraceFlow automatically broadcasts an NDI® service on your local network on port 8080/5353. On the same Wi-Fi, apps like OBS Studio (with NDI plugin), vMix, and ProPresenter will automatically see GraceFlow as a video input. You can also turn on "Transparent Background" mode in ⚙️ Settings to key countdown lower-thirds over your live camera video feeds!</p>
+            </details>
+            <details class="faq-item">
+                <summary>Do I need a second screen?</summary>
+                <p>No — you can run it on one laptop. But the app is built for the common setup: operator screen on the laptop, congregation display on a projector or TV via HDMI. One click moves the display to the second screen and makes it fullscreen.</p>
+            </details>
+            <details class="faq-item">
+                <summary>Can I count down to the exact service start time?</summary>
+                <p>Yes — that's the headline feature. Pick “Target Clock Time,” enter e.g. 7:30 AM, and the display counts down to the exact minute. If the time has already passed, it targets tomorrow. You can also run classic duration timers (10:00, 30:00…) for sermons and segments.</p>
+            </details>
+            <details class="faq-item">
+                <summary>How do I show announcements?</summary>
+                <p>The display splits into the giant countdown on the left and a rotating announcement deck on the right. Build your slides in the operator dashboard, toggle the deck on or off, or switch to a clean timer-only view at any moment.</p>
+            </details>
+            <details class="faq-item">
+                <summary>Is it really free?</summary>
+                <p>Yes. No license, no subscription, no ads. If it's useful to your church, tell another church about it.</p>
+            </details>
+        </div>
+    </section>
+
+    <!-- ============ FOOTER ============ -->
+    <footer class="site-footer">
+        <div class="section-inner footer-inner">
+            <div class="footer-brand">
+                <span class="brand-mark" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" width="20" height="20"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zm1 11h-3V7h2v4h1V7h2v8h-2v-2zm0 4h-2v-2h2v2z" fill="currentColor"/></svg>
+                </span>
+                <span>GraceFlow Countdown</span>
+            </div>
+            <p class="footer-note">Made for churches, by people who've run a sound desk. © 2026 GraceFlow.</p>
+        </div>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>

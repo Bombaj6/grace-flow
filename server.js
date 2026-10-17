@@ -439,7 +439,9 @@ const server = http.createServer((req, res) => {
 
   // Route aliases
   let filePath;
-  if (pathname === '/' || pathname === '/index.html') {
+  if (pathname === '/' || pathname === '/home' || pathname === '/home.html') {
+    filePath = path.join(__dirname, 'public', 'landing.html');
+  } else if (pathname === '/app' || pathname === '/app.html' || pathname === '/console' || pathname === '/live' || pathname === '/index.html') {
     filePath = path.join(__dirname, 'public', 'index.html');
   } else if (pathname === '/stage' || pathname === '/stage.html') {
     filePath = path.join(__dirname, 'public', 'stage.html');

@@ -106,8 +106,8 @@ async function createMainWindow() {
     show: false
   });
 
-  const baseUrl = `http://localhost:${PORT}`;
-  const serverReady = await waitForServer(baseUrl);
+  const baseUrl = `http://localhost:${PORT}/app`;
+  const serverReady = await waitForServer(`http://localhost:${PORT}`);
 
   if (serverReady) {
     mainWindow.loadURL(baseUrl);

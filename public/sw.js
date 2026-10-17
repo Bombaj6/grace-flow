@@ -2,8 +2,11 @@
 const CACHE_NAME = 'grace-flow-cache-v1';
 const CORE_ASSETS = [
   '/',
+  '/app',
   '/stage',
   '/stats',
+  '/css/landing.css',
+  '/js/landing.js',
   '/css/style.css',
   '/js/app.js',
   '/js/stage.js',

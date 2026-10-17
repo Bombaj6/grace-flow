@@ -1,0 +1,8 @@
+{
+  "latestVersion": "1.0.0",
+  "releaseDate": "2026-08-22",
+  "releaseNotes": "• Initial Official Release\n• Wall-clock precise countdown timer engine\n• NDI & OBS Local Network Live Broadcast\n• Transparent Background Mode for camera overlays\n• Unified Settings Modal & Screen 2 support",
+  "downloadUrlWindows": "https://grace-flow-church-countdown.vercel.app/downloads/GraceFlow-Church-Countdown-Windows.exe",
+  "downloadUrlMac": "https://grace-flow-church-countdown.vercel.app/downloads/GraceFlow-Church-Countdown-Mac.dmg",
+  "mandatory": false
+}

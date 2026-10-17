@@ -101,7 +101,7 @@ if ! lsof -i :$PORT >/dev/null 2>&1; then
   sleep 1.2
 fi
 
-TARGET_URL="http://localhost:$PORT"
+TARGET_URL="http://localhost:$PORT/app"
 
 # Open in dedicated standalone app-window mode (no browser address bar/tabs)
 if [ -d "/Applications/Google Chrome.app" ]; then

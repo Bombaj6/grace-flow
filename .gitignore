@@ -6,3 +6,5 @@ dist-electron/
 *.log
 npm-debug.log*
 .system_generated/
+website/downloads/
+website/Grace Flow Church countdown/
