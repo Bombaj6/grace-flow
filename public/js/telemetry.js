@@ -41,14 +41,21 @@
       body: telemetryPayload
     }).catch(() => {});
 
-    // 2. Global Cloud Telemetry Ping (Only reaches Peter's master dashboard on Render)
-    if (navigator.onLine && !window.location.hostname.includes('onrender.com')) {
-      fetch('https://grace-flow.onrender.com/api/telemetry', {
+    // 2. Global Cloud Telemetry Ping (Only reaches Peter's master dashboard on Render / graceflow.online)
+    if (navigator.onLine && !window.location.hostname.includes('graceflow.online') && !window.location.hostname.includes('onrender.com')) {
+      fetch('https://graceflow.online/api/telemetry', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: telemetryPayload,
         mode: 'cors'
-      }).catch(() => {});
+      }).catch(() => {
+        fetch('https://grace-flow.onrender.com/api/telemetry', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: telemetryPayload,
+          mode: 'cors'
+        }).catch(() => {});
+      });
     }
   } catch (e) {}
 

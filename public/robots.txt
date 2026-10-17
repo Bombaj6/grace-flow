@@ -41,4 +41,4 @@ Disallow: /stats
 Disallow: /api/
 
 # XML Sitemap
-Sitemap: https://grace-flow.onrender.com/sitemap.xml
+Sitemap: https://graceflow.online/sitemap.xml

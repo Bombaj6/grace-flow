@@ -190,7 +190,7 @@ function setupAppMenu() {
               type: 'info',
               title: 'About Grace Flow',
               message: 'Grace Flow — v1.0.0',
-              detail: 'Church Countdown, Stage Display & Run of Show Management System.\n\nCreator: Peter Olatunji\nInstagram: @_mayowapeter\nWebsite: https://grace-flow.onrender.com'
+              detail: 'Church Countdown, Stage Display & Run of Show Management System.\n\nCreator: Peter Olatunji\nInstagram: @_mayowapeter\nWebsite: https://graceflow.online'
             });
           }
         },
@@ -269,7 +269,7 @@ function setupAppMenu() {
         },
         {
           label: 'Open Web Live Version',
-          click: () => shell.openExternal('https://grace-flow.onrender.com')
+          click: () => shell.openExternal('https://graceflow.online')
         }
       ]
     }
