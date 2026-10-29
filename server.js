@@ -443,11 +443,11 @@ const server = http.createServer((req, res) => {
   let filePath;
   if (pathname === '/' || pathname === '/home' || pathname === '/home.html') {
     filePath = path.join(__dirname, 'public', 'landing.html');
-  } else if (pathname === '/app' || pathname === '/app.html' || pathname === '/console' || pathname === '/live' || pathname === '/index.html') {
+  } else if (pathname === '/app' || pathname === '/app/' || pathname === '/app.html' || pathname === '/console' || pathname === '/live' || pathname === '/index.html') {
     filePath = path.join(__dirname, 'public', 'index.html');
-  } else if (pathname === '/stage' || pathname === '/stage.html') {
+  } else if (pathname === '/stage' || pathname === '/stage/' || pathname === '/stage.html') {
     filePath = path.join(__dirname, 'public', 'stage.html');
-  } else if (pathname === '/stats' || pathname === '/stats.html') {
+  } else if (pathname === '/stats' || pathname === '/stats/' || pathname === '/stats.html') {
     filePath = path.join(__dirname, 'public', 'stats.html');
   } else {
     filePath = path.join(__dirname, 'public', pathname);
